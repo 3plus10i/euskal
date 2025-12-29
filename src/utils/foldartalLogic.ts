@@ -12,6 +12,8 @@ export interface DeclarationResult {
   source: Foldartal;
   concord: string;
   hasConcord: boolean;
+  layoutRhetoric: FlairType;
+  sourceRhetoric: FlairType;
 }
 
 export function validateCombination(layoutId: number, sourceId: number): ValidationResult {
@@ -41,12 +43,24 @@ export function validateCombination(layoutId: number, sourceId: number): Validat
 }
 
 export function getConcord(layout: Foldartal, source: Foldartal): string {
-  if (layout.type === '世相' && source.type === '世相') {
-    return '星门';
+  if (layout.type === '世相' || source.type === '世相') {
+    return '';
   }
 
-  if (layout.type === source.type && source.concord !== '无') {
-    return source.concord;
+  if (layout.type === '视相' || source.type === '视相') {
+    if (layout.concord !== '无') {
+      return layout.concord;
+    }
+    if (source.concord !== '无') {
+      return source.concord;
+    }
+    return '';
+  }
+
+  if (layout.type === source.type) {
+    if (source.concord !== '无') {
+      return source.concord;
+    }
   }
 
   return '';
@@ -80,6 +94,31 @@ export function getRandomFlair(foldartal: Foldartal): FlairType {
   return validFlairs[randomIndex].name as FlairType;
 }
 
+export function getRandomRhetoric(foldartal: Foldartal): FlairType {
+  const cannotHaveRhetoric = ['伤痕', '空无'];
+  if (cannotHaveRhetoric.includes(foldartal.name)) {
+    return null;
+  }
+
+  if (!canHaveFlair(foldartal)) {
+    return null;
+  }
+
+  const validFlairs = flairs.filter(f => f.type === foldartal.category);
+
+  if (validFlairs.length === 0) {
+    return null;
+  }
+
+  const triggerProbability = 0.2;
+  if (Math.random() > triggerProbability) {
+    return null;
+  }
+
+  const randomIndex = Math.floor(Math.random() * validFlairs.length);
+  return validFlairs[randomIndex].name as FlairType;
+}
+
 export function randomSelectFoldartals(): [Foldartal, Foldartal] {
   const layoutFoldartals = foldartals.filter(f => f.category === '布局');
   const sourceFoldartals = foldartals.filter(f => f.category === '本因');
@@ -101,11 +140,15 @@ export function createDeclaration(layoutId: number, sourceId: number): Declarati
 
   const concord = getConcord(layout, source);
   const hasConcordValue = hasConcord(layout, source);
+  const layoutRhetoric = getRandomRhetoric(layout);
+  const sourceRhetoric = getRandomRhetoric(source);
 
   return {
     layout,
     source,
     concord,
-    hasConcord: hasConcordValue
+    hasConcord: hasConcordValue,
+    layoutRhetoric,
+    sourceRhetoric
   };
 }

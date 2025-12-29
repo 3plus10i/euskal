@@ -1,96 +1,71 @@
 import React, { useState } from 'react';
 import { Foldartal } from '../../types/foldartal';
 import { foldartals } from '../../data/foldartals';
+import { FoldartalPlaceholder } from './FoldartalPlaceholder';
 
-export function FoldartalCard({ foldartal, selected, onClick }: {
-  foldartal: Foldartal;
-  selected: boolean;
-  onClick: () => void;
-}) {
-  const imagePath = `/asset/foldartals/${foldartal.id}_${foldartal.name}.png`;
-
-  return (
-    <div
-      onClick={onClick}
-      className={`
-        relative cursor-pointer transition-all duration-300 transform hover:scale-105
-        ${selected ? 'ring-4 ring-sammi-gold scale-105' : 'ring-2 ring-sammi-gold/30'}
-      `}
-    >
-      <div className="w-32 h-40 bg-sammi-blue/50 rounded-lg flex items-center justify-center overflow-hidden">
-        <img
-          src={imagePath}
-          alt={foldartal.name}
-          className="w-full h-full object-cover"
-        />
-      </div>
-      <div className="absolute bottom-0 left-0 right-0 bg-sammi-dark/90 px-2 py-1 text-center">
-        <span className="text-xs text-sammi-gold">{foldartal.name}</span>
-      </div>
-    </div>
-  );
+interface FoldartalSelectionProps {
+  onConfirm: (layout: number, source: number) => void;
+  userName: string;
 }
 
-export function FoldartalSelection({ onConfirm }: { onConfirm: (layout: number, source: number) => void }) {
-  const [selectedLayout, setSelectedLayout] = useState<number | null>(null);
-  const [selectedSource, setSelectedSource] = useState<number | null>(null);
+export function FoldartalSelection({ onConfirm, userName }: FoldartalSelectionProps) {
+  const [selectedLayout, setSelectedLayout] = useState<Foldartal | null>(null);
+  const [selectedSource, setSelectedSource] = useState<Foldartal | null>(null);
 
   const layoutFoldartals = foldartals.filter(f => f.category === '布局');
   const sourceFoldartals = foldartals.filter(f => f.category === '本因');
 
-  const handleLayoutClick = (id: number) => {
-    setSelectedLayout(id);
+  const handleLayoutClick = () => {
+    const randomIndex = Math.floor(Math.random() * layoutFoldartals.length);
+    setSelectedLayout(layoutFoldartals[randomIndex]);
   };
 
-  const handleSourceClick = (id: number) => {
-    setSelectedSource(id);
+  const handleSourceClick = () => {
+    const randomIndex = Math.floor(Math.random() * sourceFoldartals.length);
+    setSelectedSource(sourceFoldartals[randomIndex]);
   };
 
   const handleConfirm = () => {
-    if (selectedLayout !== null && selectedSource !== null) {
-      onConfirm(selectedLayout, selectedSource);
+    if (selectedLayout && selectedSource) {
+      onConfirm(selectedLayout.id, selectedSource.id);
     }
   };
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-2xl font-bold text-sammi-gold mb-4 text-center">选择布局密文板</h2>
-        <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4">
-          {layoutFoldartals.map(foldartal => (
-            <FoldartalCard
-              key={foldartal.id}
-              foldartal={foldartal}
-              selected={selectedLayout === foldartal.id}
-              onClick={() => handleLayoutClick(foldartal.id)}
-            />
-          ))}
-        </div>
+    <div className="flex flex-col items-center justify-center min-h-screen space-y-16">
+      <div className="text-center space-y-4">
+        <p className="text-2xl text-sammi-ice/80">探索者{userName}</p>
+        <h1 className="text-5xl font-bold text-sammi-glow tracking-wide">请选择密文板</h1>
+        <p className="text-sammi-ice/60 text-lg">选择布局与本因，揭示命运的启示</p>
       </div>
 
-      <div>
-        <h2 className="text-2xl font-bold text-sammi-gold mb-4 text-center">选择本因密文板</h2>
-        <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4">
-          {sourceFoldartals.map(foldartal => (
-            <FoldartalCard
-              key={foldartal.id}
-              foldartal={foldartal}
-              selected={selectedSource === foldartal.id}
-              onClick={() => handleSourceClick(foldartal.id)}
-            />
-          ))}
-        </div>
+      <div className="flex justify-center items-start gap-24">
+        <FoldartalPlaceholder
+          type="layout"
+          selected={selectedLayout !== null}
+          onClick={handleLayoutClick}
+        />
+        
+        <FoldartalPlaceholder
+          type="source"
+          selected={selectedSource !== null}
+          onClick={handleSourceClick}
+        />
       </div>
 
-      <div className="flex justify-center">
-        <button
-          onClick={handleConfirm}
-          disabled={selectedLayout === null || selectedSource === null}
-          className="px-8 py-4 bg-sammi-gold hover:bg-yellow-600 text-sammi-dark font-bold text-lg rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          开始宣告
-        </button>
-      </div>
+      <button
+        onClick={handleConfirm}
+        disabled={!selectedLayout || !selectedSource}
+        className={`
+          px-12 py-5 text-xl font-bold rounded-full transition-all duration-500
+          ${!selectedLayout || !selectedSource
+            ? 'bg-sammi-soul/20 text-sammi-ice/30 cursor-not-allowed'
+            : 'bg-sammi-yuan-red hover:bg-sammi-yuan-red/80 text-sammi-ice'
+          }
+        `}
+      >
+        开始宣读
+      </button>
     </div>
   );
 }
