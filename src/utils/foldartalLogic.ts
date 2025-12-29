@@ -1,0 +1,111 @@
+import { Foldartal, FoldartalType, FoldartalCategory, FlairType } from '../types/foldartal';
+import { foldartals } from '../data/foldartals';
+import { flairs } from '../data/flairs';
+
+export interface ValidationResult {
+  valid: boolean;
+  reason?: string;
+}
+
+export interface DeclarationResult {
+  layout: Foldartal;
+  source: Foldartal;
+  concord: string;
+  hasConcord: boolean;
+}
+
+export function validateCombination(layoutId: number, sourceId: number): ValidationResult {
+  const layout = foldartals.find(f => f.id === layoutId);
+  const source = foldartals.find(f => f.id === sourceId);
+
+  if (!layout || !source) {
+    return { valid: false, reason: '密文板不存在' };
+  }
+
+  if (layout.category !== '布局') {
+    return { valid: false, reason: '第一块密文板必须是布局型' };
+  }
+
+  if (source.category !== '本因') {
+    return { valid: false, reason: '第二块密文板必须是本因型' };
+  }
+
+  const isLayoutSociety = layout.type === '世相';
+  const isSourceSociety = source.type === '世相';
+
+  if (isLayoutSociety !== isSourceSociety) {
+    return { valid: false, reason: '世相类密文板只能与世相类密文板组合' };
+  }
+
+  return { valid: true };
+}
+
+export function getConcord(layout: Foldartal, source: Foldartal): string {
+  if (layout.type === '世相' && source.type === '世相') {
+    return '星门';
+  }
+
+  if (layout.type === source.type && source.concord !== '无') {
+    return source.concord;
+  }
+
+  return '';
+}
+
+export function hasConcord(layout: Foldartal, source: Foldartal): boolean {
+  return getConcord(layout, source) !== '';
+}
+
+export function canHaveFlair(foldartal: Foldartal): boolean {
+  return foldartal.type !== '世相';
+}
+
+export function getRandomFlair(foldartal: Foldartal): FlairType {
+  if (!canHaveFlair(foldartal)) {
+    return null;
+  }
+
+  const validFlairs = flairs.filter(f => f.type === foldartal.category);
+
+  if (validFlairs.length === 0) {
+    return null;
+  }
+
+  const randomIndex = Math.floor(Math.random() * (validFlairs.length + 1));
+
+  if (randomIndex === validFlairs.length) {
+    return null;
+  }
+
+  return validFlairs[randomIndex].name as FlairType;
+}
+
+export function randomSelectFoldartals(): [Foldartal, Foldartal] {
+  const layoutFoldartals = foldartals.filter(f => f.category === '布局');
+  const sourceFoldartals = foldartals.filter(f => f.category === '本因');
+
+  const randomLayout = layoutFoldartals[Math.floor(Math.random() * layoutFoldartals.length)];
+  const randomSource = sourceFoldartals[Math.floor(Math.random() * sourceFoldartals.length)];
+
+  return [randomLayout, randomSource];
+}
+
+export function createDeclaration(layoutId: number, sourceId: number): DeclarationResult | null {
+  const validation = validateCombination(layoutId, sourceId);
+  if (!validation.valid) {
+    return null;
+  }
+
+  const layout = foldartals.find(f => f.id === layoutId)!;
+  const source = foldartals.find(f => f.id === sourceId)!;
+
+  const concord = getConcord(layout, source);
+  const hasConcordValue = hasConcord(layout, source);
+
+  return {
+    layout,
+    source,
+    concord,
+    hasConcord: hasConcordValue
+  };
+}
