@@ -135,7 +135,6 @@ function App() {
           <div className="flex flex-col items-center justify-center min-h-screen space-y-8">
             <div className="text-center space-y-4">
               <h1 className="text-5xl font-bold text-sammi-gold mb-4">远山的密文板占卜小屋</h1>
-              <p className="text-xl text-gray-400">巴斯克星象</p>
               <p className="text-gray-500 max-w-md mx-auto">
                 来自萨米的埃拉菲亚女祭司"远山"，带来北方冰原的神秘箴言，帮助您探索命运的低语。
               </p>
@@ -158,7 +157,7 @@ function App() {
                   disabled={!userName.trim()}
                   className="w-full px-8 py-4 bg-sammi-gold hover:bg-yellow-600 text-sammi-dark font-bold text-lg rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  开始占卜
+                  进入
                 </button>
               </div>
             </form>

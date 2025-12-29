@@ -36,3 +36,12 @@ body {
 .rune-text-heavy {
   font-family: 'FarNorthRunes-Heavy', monospace;
 }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
