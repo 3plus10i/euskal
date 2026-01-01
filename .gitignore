@@ -5,5 +5,5 @@ dist
 .env
 private
 .trae
-.txt
-.csv
+*.txt
+*.csv
