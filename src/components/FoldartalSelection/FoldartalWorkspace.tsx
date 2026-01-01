@@ -4,6 +4,7 @@ import { foldartals } from '../../data/foldartals';
 import { FoldartalPlaceholder } from './FoldartalPlaceholder';
 import { CardFront } from './FoldartalCard';
 import { Dialog } from '../Dialog/Dialog';
+import { UserNameEditDialog } from './UserNameEditDialog';
 import { createDeclaration, getConcordType } from '../../utils/foldartalLogic';
 import { createSystemPrompt, createInitialInquiryPrompt } from '../../utils/prompts';
 
@@ -11,8 +12,10 @@ interface FoldartalWorkspaceProps {
   userName: string;
   initialMessages: any[];
   onSendMessage: (content: string, role?: 'user' | 'system') => void;
-  onSendMultipleMessages: (messageList: { role: 'user' | 'system', content: string, visible?: boolean }[]) => void;
+  onSendMultipleMessages: (messageList: { role: 'user' | 'system' | 'assistant', content: string, visible?: boolean }[]) => void;
   isLoading: boolean;
+  isWaitingForResponse: boolean;
+  onUserNameChange: (newName: string) => void;
 }
 
 interface StoredDeclaration {
@@ -25,13 +28,12 @@ interface StoredDeclaration {
 
 
 
-export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, onSendMultipleMessages, isLoading }: FoldartalWorkspaceProps) {
+export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, onSendMultipleMessages, isLoading, isWaitingForResponse, onUserNameChange }: FoldartalWorkspaceProps) {
   const [selectedLayout, setSelectedLayout] = useState<Foldartal | null>(null);
   const [selectedSource, setSelectedSource] = useState<Foldartal | null>(null);
   const [declared, setDeclared] = useState(false);
   const [messages, setMessages] = useState(initialMessages);
   const [editingUserName, setEditingUserName] = useState(false);
-  const [tempUserName, setTempUserName] = useState(userName);
   const [interpretationSent, setInterpretationSent] = useState(false);
   const [storedDeclaration, setStoredDeclaration] = useState<StoredDeclaration | null>(null);
 
@@ -46,8 +48,18 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
     if (selectedLayout) {
       setSelectedLayout(null);
     } else {
-      const randomIndex = Math.floor(Math.random() * layoutFoldartals.length);
-      setSelectedLayout(layoutFoldartals[randomIndex]);
+      let availableLayouts = layoutFoldartals;
+      
+      if (selectedSource) {
+        if (selectedSource.type === '世相') {
+          availableLayouts = layoutFoldartals.filter(f => f.type === '世相');
+        } else {
+          availableLayouts = layoutFoldartals.filter(f => f.type !== '世相');
+        }
+      }
+      
+      const randomIndex = Math.floor(Math.random() * availableLayouts.length);
+      setSelectedLayout(availableLayouts[randomIndex]);
     }
   };
 
@@ -55,8 +67,18 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
     if (selectedSource) {
       setSelectedSource(null);
     } else {
-      const randomIndex = Math.floor(Math.random() * sourceFoldartals.length);
-      setSelectedSource(sourceFoldartals[randomIndex]);
+      let availableSources = sourceFoldartals;
+      
+      if (selectedLayout) {
+        if (selectedLayout.type === '世相') {
+          availableSources = sourceFoldartals.filter(f => f.type === '世相');
+        } else {
+          availableSources = sourceFoldartals.filter(f => f.type !== '世相');
+        }
+      }
+      
+      const randomIndex = Math.floor(Math.random() * availableSources.length);
+      setSelectedSource(availableSources[randomIndex]);
     }
   };
 
@@ -90,26 +112,31 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
         selectedLayout.god,
         selectedSource.god,
         selectedLayout.motto,
-        selectedSource.motto
+        selectedSource.motto,
+        selectedLayout.type,
+        selectedSource.type,
+        selectedLayout.chant,
+        selectedSource.chant,
+        selectedLayout.explaination || '',
+        selectedSource.explaination || ''
       );
       
       onSendMultipleMessages([
         { role: 'system', content: systemPrompt.content, visible: false },
+        { role: 'assistant', content: initialMessages[0]?.content || '', visible: false },
         { role: 'user', content: initialInquiryPrompt.content, visible: false }
       ]);
     }
   };
 
   const handleEditUserName = () => {
-    setTempUserName(userName);
     setEditingUserName(true);
   };
 
-  const handleSaveUserName = () => {
-    if (tempUserName.trim()) {
-      localStorage.setItem('userName', tempUserName.trim());
-      setEditingUserName(false);
-    }
+  const handleSaveUserName = (newName: string) => {
+    localStorage.setItem('userName', newName);
+    onUserNameChange(newName);
+    setEditingUserName(false);
   };
 
   const handleCancelUserName = () => {
@@ -131,6 +158,7 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
 
   return (
     <div className="flex flex-col h-screen overflow-hidden relative">
+      {/* 布局密文板的背景图形 */}
       <img
         src="/asset/布局密文板的背景图形.png"
         alt="布局背景图形"
@@ -141,14 +169,14 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
         alt="本因背景图形"
         className="absolute left-[62.5%] top-0 w-[25%] h-auto object-contain opacity-50 pointer-events-none z-0"
       />
-
+      {/* 用户名显示区域 */}
       {/* <div className="text-center space-y-3 mb-6 mt-6">
         <div className="flex items-center justify-center gap-2">
           <p className="text-2xl font-bold text-sammi-glow tracking-wide">欢迎，探索者 {userName}</p>
           <button
             onClick={handleEditUserName}
             className="text-sammi-snow/60 hover:text-sammi-glow transition-colors"
-            title="修改用户名"
+            title="你的名字是..."
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
               <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
@@ -157,51 +185,24 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
         </div>
       </div> */}
       <div className="h-[40%] p-6 relative z-10">
-
-        {editingUserName && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="ice-glass p-6 rounded-xl space-y-4">
-              <h3 className="text-lg font-bold text-sammi-snow">修改用户名</h3>
-              <input
-                type="text"
-                value={tempUserName}
-                onChange={(e) => setTempUserName(e.target.value)}
-                className="w-full ice-glass px-4 py-2 text-sammi-snow focus:outline-none focus:ring-2 focus:ring-sammi-glow"
-                autoFocus
-              />
-              <div className="flex gap-3 justify-end">
-                <button
-                  onClick={handleCancelUserName}
-                  className="ice-glass px-4 py-2 hover:bg-sammi-snow/30 text-sammi-snow transition-colors"
-                >
-                  取消
-                </button>
-                <button
-                  onClick={handleSaveUserName}
-                  className="ice-glass px-4 py-2 hover:bg-sammi-yuan-red/80 text-sammi-ice transition-colors"
-                >
-                  保存
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
         {!declared ? (
+          // 布局密文板和本因密文板的选择区域
           <div className="flex justify-center items-center gap-8 h-full">
+            {/* 布局密文板选择区域 */}
             <FoldartalPlaceholder
               type="layout"
               selected={selectedLayout !== null}
               onClick={handleLayoutClick}
             />
 
+            {/* 中间的开始宣告按钮 */}
             <div
               onClick={handleDeclare}
               className={`
-                relative w-full max-w-[256px] aspect-[4/3] cursor-pointer transition-all duration-500 hover:-translate-y-2 hover:brightness-110
+                relative w-full max-w-[256px] aspect-[4/3] cursor-pointer transition-all duration-500
                 ${!selectedLayout || !selectedSource
                   ? 'opacity-30 cursor-not-allowed'
-                  : 'opacity-100'
+                  : 'opacity-100 hover:-translate-y-2 hover:brightness-110'
                 }
               `}
             >
@@ -215,6 +216,7 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
               </span>
             </div>
 
+            {/* 本因密文板选择区域 */}
             <FoldartalPlaceholder
               type="source"
               selected={selectedSource !== null}
@@ -222,8 +224,10 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
             />
           </div>
         ) : (
+          // 宣告后的 布局密文板和本因密文板的显示区域
           <div className="flex flex-col items-center h-full justify-center">
             <div className="flex justify-center items-center gap-4 w-full h-full max-w-[100rem] px-4">
+              
               {declaration && (
                 <>
                   <div className="flex-1 flex justify-end items-center">
@@ -256,14 +260,14 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
                     </div>
                     
                     {declaration.concord && declaration.concord !== '无' && (
-                      <div className="relative flex flex-col items-center">
+                      <div className="relative flex flex-col items-center" style={{marginBottom: '1rem'}}>
                         {declaration.layout.type !== '世相' && declaration.source.type !== '世相' && (
                           <img
                             src={`/asset/${getConcordType(declaration.layout, declaration.source)}logo1x1.png`}
                             alt={getConcordType(declaration.layout, declaration.source)}
                             className="absolute inset-0 w-full h-full object-contain opacity-50 -z-10"
                             style={{
-                              scale: '1.4'
+                              scale: '2'
                             }}
                           />
                         )}
@@ -294,9 +298,9 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
                                 <img
                                   src={`/asset/修辞_${storedDeclaration.sourceRhetoric}.png`}
                                   alt={storedDeclaration.sourceRhetoric}
-                                  className="absolute inset-0 w-[clamp(40px,5vw,48px)] h-[clamp(40px,5vw,48px)] object-contain opacity-20 -z-10"
+                                  className="absolute inset-0 w-[clamp(40px,5vw,48px)] h-[clamp(40px,5vw,48px)] object-contain opacity-50 -z-10"
                                   style={{
-                                    scale: '1.4'
+                                    scale: '1.5'
                                   }}
                                 />
                                 <p className="text-[clamp(12px,1.5vw,16px)] text-sammi-glow relative z-10">
@@ -366,8 +370,16 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
           messages={messages.filter(m => m.role !== 'system')}
           onSendMessage={onSendMessage}
           isLoading={isLoading}
+          isWaitingForResponse={isWaitingForResponse}
         />
       </div>
+
+      <UserNameEditDialog
+        isOpen={editingUserName}
+        currentUserName={userName}
+        onSave={handleSaveUserName}
+        onCancel={handleCancelUserName}
+      />
     </div>
   );
 }

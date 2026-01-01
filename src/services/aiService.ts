@@ -42,6 +42,14 @@ export class AIService {
       onError(new Error('连接超时'));
     }, 25000);
 
+    const debugMessage = (msg, enable) => enable && console.log(`[AIService] ${msg}`);
+    const payload = {
+      model: MODEL,
+      messages,
+      stream: true
+    };
+    debugMessage(`Request payload: ${JSON.stringify(payload, null, 2)}`, false);
+
     try {
       const response = await fetch(`${this.baseUrl}/chat/completions`, {
         method: 'POST',
@@ -49,11 +57,7 @@ export class AIService {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${this.apiKey}`
         },
-        body: JSON.stringify({
-          model: MODEL,
-          messages,
-          stream: true
-        }),
+        body: JSON.stringify(payload),
         signal: this.abortController.signal
       });
 

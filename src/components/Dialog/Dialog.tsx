@@ -4,10 +4,11 @@ import remarkGfm from 'remark-gfm';
 import { aiService } from '../../services/aiService';
 import { Message } from '../../services/aiService';
 
-export function Dialog({ messages, onSendMessage, isLoading }: {
+export function Dialog({ messages, onSendMessage, isLoading, isWaitingForResponse }: {
   messages: Message[];
   onSendMessage: (content: string) => void;
   isLoading: boolean;
+  isWaitingForResponse: boolean;
 }) {
   const [input, setInput] = useState('');
   const [dotCount, setDotCount] = useState(1);
@@ -80,7 +81,7 @@ export function Dialog({ messages, onSendMessage, isLoading }: {
     return role === 'user' ? '探索者' : '远山';
   };
 
-  const shouldShowPlaceholder = isLoading && (!messages.length || messages[messages.length - 1].role !== 'assistant' || messages[messages.length - 1].content === '');
+  const shouldShowPlaceholder = isWaitingForResponse;
 
   const messagesToRender = shouldShowPlaceholder && messages.length > 0 && messages[messages.length - 1].role === 'assistant' && messages[messages.length - 1].content === ''
     ? messages.slice(0, -1)

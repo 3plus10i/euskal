@@ -82,12 +82,12 @@ export function CardFront({ foldartal, position, animate = false }: CardFrontPro
         
         <div className="absolute inset-0 z-10">
           <div className="absolute top-[6%] left-1/2 -translate-x-1/2 text-center">
-            <p className="text-[clamp(16px,3vw,24px)] font-medium text-sammi-snow">
+            <p className="text-[clamp(10px,3vw,24px)] font-medium text-sammi-snow">
               {foldartal.nameRune.replace(/[\[\]]/g, '')}
             </p>
           </div>
           <div className="absolute top-[16.5%] left-1/2 -translate-x-1/2 text-center">
-            <p className="text-[clamp(8px,1vw,10px)] font-thin tracking-widest text-sammi-snow/50 font-mono">
+            <p className="text-[clamp(4px,1vw,10px)] font-thin tracking-widest text-sammi-snow/50 font-mono">
               {foldartal.god}
             </p>
           </div>
@@ -101,12 +101,12 @@ export function CardFront({ foldartal, position, animate = false }: CardFrontPro
           </div>
           
           <div className="absolute bottom-[26%] left-1/2 -translate-x-1/2 text-center font-extrabold space-y-0.5">
-            <p className="text-[clamp(12px,2vw,16px)] text-sammi-snow">
+            <p className="text-[clamp(8px,2vw,16px)] text-sammi-snow">
               {foldartal.name}
             </p>
           </div>
           <div className="absolute bottom-[16%] left-1/2 -translate-x-1/2 text-center space-y-0.5">
-            <p className="text-[clamp(10px,1.5vw,14px)] text-sammi-snow/50 font-mono">
+            <p className="text-[clamp(4px,1.5vw,14px)] text-sammi-snow/50 font-mono">
               {foldartal.nameEn}
             </p>
           </div>

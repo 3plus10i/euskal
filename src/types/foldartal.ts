@@ -16,6 +16,7 @@ export interface Foldartal {
   godEn: string;
   motto: string;
   flair?: FlairType;
+  explaination?: string;
 }
 
 export interface Flair {

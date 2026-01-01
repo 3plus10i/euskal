@@ -15,9 +15,9 @@
 4. **菜单系统** - 包含用户设置、关于信息等功能
 
 ### 关键文件分析
-- **[aiService.ts](file:///e:/Code/euskal/src/services/aiService.ts)** - AI服务核心，实现了流式对话功能，包含超时控制和错误处理机制
-- **[App.tsx](file:///e:/Code/euskal/src/App.tsx)** - 主应用逻辑，管理应用状态和用户交互
-- **[foldartal.ts](file:///e:/Code/euskal/src/types/foldartal.ts)** - 类型定义，规范了密文板数据结构
+- **[aiService.ts](./euskal/src/services/aiService.ts)** - AI服务核心，实现了流式对话功能，包含超时控制和错误处理机制
+- **[App.tsx](./euskal/src/App.tsx)** - 主应用逻辑，管理应用状态和用户交互
+- **[foldartal.ts](./euskal/src/types/foldartal.ts)** - 类型定义，规范了密文板数据结构
 
 ### 项目特色
 - 丰富的视觉资源：包含大量游戏风格的艺术素材和背景图片
@@ -57,32 +57,3 @@
 宣告 Declaration 
 协语 Concord 
 修辞 Flair
-
-#### 配色系统
-荧光绿 #bcedf5 用于神奇，神秘，异能，神谕等相关概念
-冰雪白 #CDCFD5 用于萨米的自然，环境，通用背景
-深空蓝 #233340 用于萨米的深空，宏达，深邃，寒冷，通用背景
-族群红 #b83f38 族群类，下同
-自然绿 #34847c 
-灵魂蓝 #3473ab
-世相灰 #6e6d6e
-世相彩 background:conic-gradient(#c14141, #2a5778, #1e9782, #c14141); 用于世相相关的特种配色
-背景灰 #464646 用于局部通用背景，密文板等logo图像展示背景
-远山红 #902D46 “远山”的角色色之一，下同
-远山黑 #36262E
-远山粉 #EDDCD4
-灰雪白 #9ebbd7 用于密文板相关的的一般性文字，或Rune型文字，有雕刻感
-
-一般强调：正面属性的强调的文字
-color: #e1f5fe;
-text-shadow: 0 0 3px #03a9f4, 0 0 5px black, 0 0 5px black;
-
-荧光强调：
-适用于强调。荧光绿文字可加背景#5fb4cf 或 linear-gradient(45deg, #121c24, #5fb4cf)
-
-标志卡片：
-加底的小logo（适用于标志用的少量文字，例如“修辞”，“协语”字样）
-background: linear-gradient(90deg, #4a7aad, #91dded);
-color: white;
-padding: 0px 5px;
-border-radius: 2px;

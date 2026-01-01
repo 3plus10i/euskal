@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { MenuButton, MenuModal } from './components/Menu/Menu';
 import { FoldartalWorkspace } from './components/FoldartalSelection/FoldartalWorkspace';
 import { aiService, Message } from './services/aiService';
+import { createWelcomeMessage } from './utils/prompts';
 
 const AppStage = {
   GREETING: 'greeting',
@@ -28,11 +29,13 @@ const backgroundImages = [
 function App() {
   const [userName, setUserName] = useState(() => {
     const saved = localStorage.getItem('userName');
-    return saved || '探索者';
+    return saved || '';
   });
   const [stage, setStage] = useState(AppStage.GREETING);
-  const [messages, setMessages] = useState([]);
+  const [allMessages, setAllMessages] = useState([]);
+  const [visibleMessages, setVisibleMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuTab, setMenuTab] = useState('about');
   const [workspaceKey, setWorkspaceKey] = useState(0);
@@ -46,55 +49,90 @@ function App() {
 
   const handleEnter = () => {
     setStage(AppStage.WORKSPACE);
+    const welcomeMessage = {
+      role: 'assistant',
+      content: createWelcomeMessage(userName)
+    };
+    setAllMessages([welcomeMessage]);
+    setVisibleMessages([welcomeMessage]);
   };
 
   const handleSendMessage = (content, role = 'user') => {
-    const newMessages = [...messages, { role, content }];
-    setMessages([...newMessages, { role: 'assistant', content: '' }]);
+    const newMessage = { role, content };
+    const newAllMessages = [...allMessages, newMessage];
+    const newVisibleMessages = [...visibleMessages, newMessage];
+    setAllMessages(newAllMessages);
+    setVisibleMessages(newVisibleMessages);
     setIsLoading(true);
+    setIsWaitingForResponse(true);
 
     let assistantMessage = '';
+    let firstChunkReceived = false;
     
     aiService.chat(
-      newMessages,
+      newAllMessages,
       (chunk) => {
+        if (!firstChunkReceived) {
+          firstChunkReceived = true;
+          setIsWaitingForResponse(false);
+        }
         assistantMessage += chunk;
-        setMessages([...newMessages, { role: 'assistant', content: assistantMessage }]);
+        const assistantMsg = { role: 'assistant', content: assistantMessage };
+        setAllMessages([...newAllMessages, assistantMsg]);
+        setVisibleMessages([...newVisibleMessages, assistantMsg]);
       },
       () => {
         setIsLoading(false);
+        setIsWaitingForResponse(false);
       },
       (error) => {
         console.error('AI Error:', error);
         setIsLoading(false);
+        setIsWaitingForResponse(false);
         const errorMessage = error.message === '连接超时' ? '连接超时，请稍后再试。' : '抱歉，我无法回应。请稍后再试。';
-        setMessages([...newMessages, { role: 'assistant', content: errorMessage }]);
+        const errorMsg = { role: 'assistant', content: errorMessage };
+        setAllMessages([...newAllMessages, errorMsg]);
+        setVisibleMessages([...newVisibleMessages, errorMsg]);
       }
     );
   };
 
   const handleSendMultipleMessages = (messageList: { role: 'user' | 'system', content: string, visible?: boolean }[]) => {
-    const visibleMessages = messageList.filter(m => m.visible !== false);
-    const newMessages = [...messages, ...visibleMessages];
-    setMessages([...newMessages, { role: 'assistant', content: '' }]);
+    const visibleMsgs = messageList.filter(m => m.visible !== false);
+    const newAllMessages = [...allMessages, ...messageList];
+    const newVisibleMessages = [...visibleMessages, ...visibleMsgs];
+    setAllMessages(newAllMessages);
+    setVisibleMessages(newVisibleMessages);
     setIsLoading(true);
+    setIsWaitingForResponse(true);
 
     let assistantMessage = '';
+    let firstChunkReceived = false;
     
     aiService.chat(
-      messageList,
+      newAllMessages,
       (chunk) => {
+        if (!firstChunkReceived) {
+          firstChunkReceived = true;
+          setIsWaitingForResponse(false);
+        }
         assistantMessage += chunk;
-        setMessages([...newMessages, { role: 'assistant', content: assistantMessage }]);
+        const assistantMsg = { role: 'assistant', content: assistantMessage };
+        setAllMessages([...newAllMessages, assistantMsg]);
+        setVisibleMessages([...newVisibleMessages, assistantMsg]);
       },
       () => {
         setIsLoading(false);
+        setIsWaitingForResponse(false);
       },
       (error) => {
         console.error('AI Error:', error);
         setIsLoading(false);
+        setIsWaitingForResponse(false);
         const errorMessage = error.message === '连接超时' ? '连接超时，请稍后再试。' : '抱歉，我无法回应。请稍后再试。';
-        setMessages([...newMessages, { role: 'assistant', content: errorMessage }]);
+        const errorMsg = { role: 'assistant', content: errorMessage };
+        setAllMessages([...newAllMessages, errorMsg]);
+        setVisibleMessages([...newVisibleMessages, errorMsg]);
       }
     );
   };
@@ -102,11 +140,21 @@ function App() {
   const handleUserNameChange = (newName) => {
     setUserName(newName);
     setStage(AppStage.WORKSPACE);
-    setMessages([]);
+    const welcomeMessage = {
+      role: 'assistant',
+      content: createWelcomeMessage(newName)
+    };
+    setAllMessages([welcomeMessage]);
+    setVisibleMessages([welcomeMessage]);
   };
 
   const handleReset = () => {
-    setMessages([]);
+    const welcomeMessage = {
+      role: 'assistant',
+      content: createWelcomeMessage(userName)
+    };
+    setAllMessages([welcomeMessage]);
+    setVisibleMessages([welcomeMessage]);
     setWorkspaceKey(prev => prev + 1);
   };
 
@@ -137,7 +185,7 @@ function App() {
       {stage === AppStage.GREETING && (
         <div className="flex flex-col items-center justify-center min-h-screen space-y-12">
           <div className="text-center space-y-6">
-            <h1 className="text-6xl font-bold text-sammi-glow tracking-wide">密文板研究</h1>
+            <h1 className="text-6xl font-bold text-sammi-glow tracking-wide">远山的密文板占卜小屋</h1>
             <p className="text-sammi-ice/70 text-xl max-w-2xl leading-relaxed">
               与远山一起探索萨米冰原的密文低语，宣告神谕，洞察未来。
             </p>
@@ -161,10 +209,12 @@ function App() {
         <FoldartalWorkspace
           key={workspaceKey}
           userName={userName}
-          initialMessages={messages}
+          initialMessages={visibleMessages}
           onSendMessage={handleSendMessage}
           onSendMultipleMessages={handleSendMultipleMessages}
           isLoading={isLoading}
+          isWaitingForResponse={isWaitingForResponse}
+          onUserNameChange={setUserName}
         />
       )}
       </div>
