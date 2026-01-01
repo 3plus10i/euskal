@@ -273,7 +273,7 @@ export const foldartals: Foldartal[] = [
     name: '离去',
     nameEn: 'Departure',
     nameRune: '[ᚠᛟᚱᛚᚨᛏᚨ]',
-    category: '本因',
+    category: '布局',
     concord: '无',
     value: 12,
     chant: '声闻形貌终已远，变数未可知。',

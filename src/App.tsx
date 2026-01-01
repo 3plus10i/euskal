@@ -137,18 +137,23 @@ function App() {
       {stage === AppStage.GREETING && (
         <div className="flex flex-col items-center justify-center min-h-screen space-y-12">
           <div className="text-center space-y-6">
-            <h1 className="text-6xl font-bold text-sammi-glow tracking-wide">远山的密文板占卜小屋</h1>
+            <h1 className="text-6xl font-bold text-sammi-glow tracking-wide">密文板研究</h1>
             <p className="text-sammi-ice/70 text-xl max-w-2xl leading-relaxed">
-              来自萨米的埃拉菲亚女祭司"远山"，带来北方冰原的神秘箴言，帮助您探索命运的低语。
+              与远山一起探索萨米冰原的密文低语，宣告神谕，洞察未来。
             </p>
           </div>
 
-          <button
+          <div
             onClick={handleEnter}
-            className="px-8 py-4 bg-sammi-yuan-red hover:bg-sammi-yuan-red/80 text-sammi-ice font-bold text-xl rounded-full transition-all"
+            className="flex flex-col items-center cursor-pointer brightness-75 transition-all duration-500 hover:-translate-y-2 hover:brightness-110"
           >
-            进入
-          </button>
+            <img
+              src="/asset/模组_占卜师旅行套装1x1.png"
+              alt="进入"
+              className="w-64 h-64 object-contain"
+            />
+            <span className="text-sammi-ice font-bold text-2xl">进入</span>
+          </div>
         </div>
       )}
 

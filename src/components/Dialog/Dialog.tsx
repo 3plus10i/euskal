@@ -11,8 +11,33 @@ export function Dialog({ messages, onSendMessage, isLoading }: {
 }) {
   const [input, setInput] = useState('');
   const [dotCount, setDotCount] = useState(1);
+  const [portraitIndex, setPortraitIndex] = useState(1);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [opacity, setOpacity] = useState(1);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const portraits = [
+    '/asset/立绘_远山_1.png',
+    '/asset/立绘_远山_2.png',
+    '/asset/立绘_远山_skin1.png'
+  ];
+
+  const handlePortraitClick = () => {
+    if (isTransitioning) return;
+    
+    setIsTransitioning(true);
+    setOpacity(0);
+    
+    setTimeout(() => {
+      setPortraitIndex((prev) => (prev + 1) % portraits.length);
+      setOpacity(1);
+      
+      setTimeout(() => {
+        setIsTransitioning(false);
+      }, 1000);
+    }, 1000);
+  };
 
   useEffect(() => {
     if (isLoading) {
@@ -65,9 +90,11 @@ export function Dialog({ messages, onSendMessage, isLoading }: {
     <div className="flex h-full w-full">
       <div className="w-[40%] flex items-center justify-end">
         <img
-          src="/asset/立绘_远山_2.png"
+          src={portraits[portraitIndex]}
           alt="角色立绘"
-          className="h-[90%] object-contain"
+          onClick={handlePortraitClick}
+          className={`h-[90%] object-contain cursor-pointer transition-opacity duration-1000`}
+          style={{ opacity }}
         />
       </div>
 
@@ -78,7 +105,7 @@ export function Dialog({ messages, onSendMessage, isLoading }: {
               <div className="text-sammi-glow font-bold text-sm mb-2">
                 {getSpeakerName(message.role)}
               </div>
-              <div className="text-sammi-snow leading-relaxed whitespace-normal font-serif-message prose prose-invert max-w-none">
+              <div className="text-sammi-snow leading-relaxed whitespace-normal font-serif-message prose prose-invert max-w-none" style={{ fontSize: '1.1rem' }}>
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                   {message.content}
                 </ReactMarkdown>
@@ -114,7 +141,7 @@ export function Dialog({ messages, onSendMessage, isLoading }: {
           <button
             type="submit"
             disabled={!input.trim() || isLoading}
-            className="px-6 py-3 bg-sammi-yuan-red hover:bg-sammi-yuan-red/80 text-sammi-ice font-bold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-3 bg-sammi-deep hover:bg-sammi-deep/80 text-sammi-snow font-bold rounded-[20%] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             发送
           </button>

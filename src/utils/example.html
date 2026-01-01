@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS 动画与样式类展示</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @layer components {
+            .ice-glass {
+                background: rgba(205, 207, 213, 0.3);
+                backdrop-filter: blur(8px);
+                border-radius: 0.5rem;
+                box-shadow: 0 0 12px rgba(205, 207, 213, 0.15), inset 0 0 20px rgba(205, 207, 213, 0.05);
+                border: 1px solid rgba(205, 207, 213, 0.2);
+            }
+
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(5px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @keyframes fadeOutUp {
+                from {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+                to {
+                    opacity: 0;
+                    transform: translateY(-5px);
+                }
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+
+            @keyframes fadeOut {
+                from {
+                    opacity: 1;
+                }
+                to {
+                    opacity: 0;
+                }
+            }
+
+            .animate-fade-in-up {
+                animation: fadeInUp 0.3s ease-out forwards;
+            }
+
+            .animate-fade-out-up {
+                animation: fadeOutUp 0.3s ease-in forwards;
+            }
+
+            .animate-fade-in {
+                animation: fadeIn 1s ease-out forwards;
+            }
+
+            .animate-fade-out {
+                animation: fadeOut 1s ease-in forwards;
+            }
+
+            .text-emphasis {
+                color: #e1f5fe;
+                text-shadow: 0 0 3px #03a9f4, 0 0 5px black, 0 0 5px black;
+            }
+
+            .text-glow-emphasis {
+                background: linear-gradient(45deg, #121c24, #5fb4cf);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+
+            .badge-card {
+                background: linear-gradient(90deg, #4a7aad, #91dded);
+                color: white;
+                padding: 0px 5px;
+                border-radius: 2px;
+            }
+            
+            /* 基础样式 */
+            body {
+                background: linear-gradient(135deg, #1a1c2c 0%, #2a3c5e 100%);
+                color: #e1f5fe;
+                min-height: 100vh;
+            }
+            
+            .demo-container {
+                margin-bottom: 2rem;
+            }
+            
+            .demo-title {
+                font-size: 1.25rem;
+                font-weight: 600;
+                margin-bottom: 0.75rem;
+                color: #91dded;
+                border-bottom: 1px solid rgba(205, 207, 213, 0.2);
+                padding-bottom: 0.5rem;
+            }
+            
+            .demo-box {
+                padding: 1.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            .code-block {
+                font-family: 'Courier New', monospace;
+                background-color: rgba(0, 0, 0, 0.3);
+                border-radius: 0.375rem;
+                padding: 1rem;
+                margin-top: 0.75rem;
+                font-size: 0.875rem;
+                border-left: 3px solid #5fb4cf;
+            }
+            
+            .example-text {
+                font-size: 1.125rem;
+                margin: 0.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body class="p-6">
+    <div class="max-w-4xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl font-bold mb-2 text-glow-emphasis">CSS 动画与样式类展示</h1>
+            <p class="text-gray-300">简洁展示自定义 CSS 动画与样式效果</p>
+        </header>
+
+        <div class="ice-glass p-6 mb-8">
+            <h2 class="demo-title">冰玻璃效果容器</h2>
+            <div class="demo-box">
+                <p class="example-text">这是一个使用 .ice-glass 类的容器，具有毛玻璃背景效果。</p>
+                <div class="code-block">.ice-glass</div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- 动画类展示 -->
+            <div class="ice-glass p-6">
+                <h2 class="demo-title">动画类</h2>
+                
+                <div class="demo-container">
+                    <h3 class="text-lg font-medium mb-2">1. .animate-fade-in-up</h3>
+                    <p class="mb-3">从下方淡入浮现（0.3秒）</p>
+                    <button onclick="triggerAnimation('fadeInUpDemo')" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm">
+                        触发动画
+                    </button>
+                    <div class="mt-4">
+                        <div id="fadeInUpDemo" class="bg-blue-500/20 p-4 rounded">
+                            <p class="example-text">这个元素将使用 .animate-fade-in-up 动画</p>
+                        </div>
+                    </div>
+                    <div class="code-block">.animate-fade-in-up</div>
+                </div>
+                
+                <div class="demo-container">
+                    <h3 class="text-lg font-medium mb-2">2. .animate-fade-out-up</h3>
+                    <p class="mb-3">向上方淡出消隐（0.3秒）</p>
+                    <button onclick="triggerAnimation('fadeOutUpDemo')" class="px-3 py-1 bg-purple-600 hover:bg-purple-700 text-white rounded text-sm">
+                        触发动画
+                    </button>
+                    <button onclick="resetElement('fadeOutUpDemo')" class="px-3 py-1 bg-gray-600 hover:bg-gray-700 text-white rounded text-sm ml-2">
+                        重置
+                    </button>
+                    <div class="mt-4">
+                        <div id="fadeOutUpDemo" class="bg-purple-500/20 p-4 rounded">
+                            <p class="example-text">这个元素将使用 .animate-fade-out-up 动画</p>
+                        </div>
+                    </div>
+                    <div class="code-block">.animate-fade-out-up</div>
+                </div>
+                
+                <div class="demo-container">
+                    <h3 class="text-lg font-medium mb-2">3. .animate-fade-in</h3>
+                    <p class="mb-3">淡入效果（1秒）</p>
+                    <button onclick="triggerAnimation('fadeInDemo')" class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-sm">
+                        触发动画
+                    </button>
+                    <div class="mt-4">
+                        <div id="fadeInDemo" class="bg-green-500/20 p-4 rounded opacity-0">
+                            <p class="example-text">这个元素将使用 .animate-fade-in 动画</p>
+                        </div>
+                    </div>
+                    <div class="code-block">.animate-fade-in</div>
+                </div>
+                
+                <div class="demo-container">
+                    <h3 class="text-lg font-medium mb-2">4. .animate-fade-out</h3>
+                    <p class="mb-3">淡出效果（1秒）</p>
+                    <button onclick="triggerAnimation('fadeOutDemo')" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-sm">
+                        触发动画
+                    </button>
+                    <button onclick="resetElement('fadeOutDemo')" class="px-3 py-1 bg-gray-600 hover:bg-gray-700 text-white rounded text-sm ml-2">
+                        重置
+                    </button>
+                    <div class="mt-4">
+                        <div id="fadeOutDemo" class="bg-red-500/20 p-4 rounded">
+                            <p class="example-text">这个元素将使用 .animate-fade-out 动画</p>
+                        </div>
+                    </div>
+                    <div class="code-block">.animate-fade-out</div>
+                </div>
+            </div>
+
+            <!-- 样式类展示 -->
+            <div class="ice-glass p-6">
+                <h2 class="demo-title">样式类</h2>
+                
+                <div class="demo-container">
+                    <h3 class="text-lg font-medium mb-2">5. .text-emphasis</h3>
+                    <p class="mb-3">蓝色发光文字效果</p>
+                    <div class="p-4 bg-gray-800/50 rounded">
+                        <p class="example-text text-emphasis">这是一段使用 .text-emphasis 类的文字，具有蓝色发光效果。</p>
+                    </div>
+                    <div class="code-block">.text-emphasis</div>
+                </div>
+                
+                <div class="demo-container">
+                    <h3 class="text-lg font-medium mb-2">6. .text-glow-emphasis</h3>
+                    <p class="mb-3">渐变荧光文字效果</p>
+                    <div class="p-4 bg-gray-800/50 rounded">
+                        <p class="example-text text-glow-emphasis">这是一段使用 .text-glow-emphasis 类的文字，具有渐变荧光效果。</p>
+                    </div>
+                    <div class="code-block">.text-glow-emphasis</div>
+                </div>
+                
+                <div class="demo-container">
+                    <h3 class="text-lg font-medium mb-2">7. .badge-card</h3>
+                    <p class="mb-3">渐变背景小标签</p>
+                    <div class="p-4 bg-gray-800/50 rounded flex flex-wrap gap-2">
+                        <span class="badge-card">标签1</span>
+                        <span class="badge-card">标签2</span>
+                        <span class="badge-card">标签3</span>
+                        <span class="badge-card">长标签示例</span>
+                    </div>
+                    <div class="code-block">.badge-card</div>
+                </div>
+                
+                <div class="demo-container">
+                    <h3 class="text-lg font-medium mb-2">组合示例</h3>
+                    <p class="mb-3">动画与样式组合效果</p>
+                    <button onclick="triggerAnimation('comboDemo')" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded text-sm">
+                        触发组合动画
+                    </button>
+                    <div class="mt-4">
+                        <div id="comboDemo" class="p-4 rounded flex flex-col gap-2 opacity-0">
+                            <span class="badge-card inline-block w-fit">新闻标签</span>
+                            <p class="example-text text-emphasis">这是一个组合示例</p>
+                            <p class="example-text text-glow-emphasis">同时应用了多种样式和动画</p>
+                        </div>
+                    </div>
+                    <div class="code-block">.animate-fade-in-up + .text-emphasis + .text-glow-emphasis + .badge-card</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ice-glass p-6 mt-8">
+            <h2 class="demo-title">使用说明</h2>
+            <div class="space-y-3">
+                <p><strong>动画类使用：</strong>为元素添加对应的动画类即可触发动画效果。</p>
+                <p><strong>样式类使用：</strong>为元素添加对应的样式类即可应用视觉效果。</p>
+                <p><strong>重置动画：</strong>对于淡出动画，需要移除动画类并重置元素样式才能重新显示。</p>
+                <p><strong>组合使用：</strong>可以同时应用多个类来实现复杂效果。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 触发动画函数
+        function triggerAnimation(elementId) {
+            const element = document.getElementById(elementId);
+            
+            // 根据元素ID确定使用哪个动画类
+            let animationClass = '';
+            switch(elementId) {
+                case 'fadeInUpDemo':
+                    animationClass = 'animate-fade-in-up';
+                    break;
+                case 'fadeOutUpDemo':
+                    animationClass = 'animate-fade-out-up';
+                    break;
+                case 'fadeInDemo':
+                    animationClass = 'animate-fade-in';
+                    break;
+                case 'fadeOutDemo':
+                    animationClass = 'animate-fade-out';
+                    break;
+                case 'comboDemo':
+                    animationClass = 'animate-fade-in-up';
+                    break;
+            }
+            
+            // 重置动画状态
+            element.classList.remove('animate-fade-in-up', 'animate-fade-out-up', 'animate-fade-in', 'animate-fade-out');
+            
+            // 触发重排以确保动画能重新播放
+            void element.offsetWidth;
+            
+            // 添加动画类
+            element.classList.add(animationClass);
+            
+            // 如果是淡入动画，需要先设置透明
+            if (elementId === 'fadeInDemo' || elementId === 'comboDemo') {
+                element.classList.add('opacity-0');
+                setTimeout(() => {
+                    element.classList.remove('opacity-0');
+                }, 10);
+            }
+        }
+        
+        // 重置元素函数
+        function resetElement(elementId) {
+            const element = document.getElementById(elementId);
+            
+            // 移除所有动画类
+            element.classList.remove('animate-fade-in-up', 'animate-fade-out-up', 'animate-fade-in', 'animate-fade-out');
+            
+            // 重置样式
+            if (elementId === 'fadeOutUpDemo' || elementId === 'fadeOutDemo') {
+                element.classList.remove('opacity-0');
+                element.style.transform = 'translateY(0)';
+            }
+        }
+        
+        // 页面加载后自动触发一些动画
+        document.addEventListener('DOMContentLoaded', function() {
+            // 延迟触发一些动画效果
+            setTimeout(() => {
+                triggerAnimation('fadeInUpDemo');
+            }, 300);
+            
+            setTimeout(() => {
+                triggerAnimation('fadeInDemo');
+            }, 800);
+        });
+    </script>
+</body>
+</html>
