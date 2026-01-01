@@ -42,10 +42,24 @@ export function validateCombination(layoutId: number, sourceId: number): Validat
   return { valid: true };
 }
 
-export function getConcord(layout: Foldartal, source: Foldartal): string {
+export function getConcordType(layout: Foldartal, source: Foldartal): string {
   if (layout.type === '世相' || source.type === '世相') {
     return '';
   }
+
+  // 视相触发协语时，协语类型为本因板类型
+  if (layout.type === '视相' || source.type === '视相') {
+    return source.type === '视相' ? layout.type : source.type;
+  }
+
+  // 同类型触发协语时，协语类型为该类型
+  if (layout.type === source.type) {
+    return layout.type;
+  }
+  return '';
+}
+
+export function getConcord(layout: Foldartal, source: Foldartal): string {
 
   if (layout.type === '视相' || source.type === '视相') {
     if (layout.concord !== '无') {

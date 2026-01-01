@@ -1,109 +1,88 @@
-# 远山的密文板占卜小屋
+### 项目概览
+这是一个React + TypeScript构建的单页应用，通过Vite进行构建，使用Tailwind CSS进行样式设计。项目模拟了游戏中的"密文板"占卜系统，用户可以选择不同的密文板组合，并与AI驱动的占卜师"远山"进行对话。
 
-基于游戏《明日方舟》集成战略玩法"探索者的银淞止境"中"密文板"的设定创作的神秘学占卜网站应用。
+### 技术架构
+- **前端框架**: React 18 + TypeScript
+- **构建工具**: Vite
+- **样式方案**: Tailwind CSS + 自定义主题色彩
+- **AI集成**: OpenAI API (支持自定义base_url)
+- **Markdown渲染**: react-markdown + remark-gfm
 
-## 功能特性
+### 核心功能模块
+1. **密文板系统** - 包含43种不同密文板，分为族群、灵魂、自然、世相、视相五大类型
+2. **AI对话服务** - 流式对话接口，支持超时控制和错误处理
+3. **界面布局** -  greeting页面和工作区双阶段设计
+4. **菜单系统** - 包含用户设置、关于信息等功能
 
-- 密文板选择与组合
-- 密文板宣告展示
-- AI 驱动的占卜师对话
-- 神秘的北方冰原界面风格
-- 响应式设计（PC + 移动端）
+### 关键文件分析
+- **[aiService.ts](file:///e:/Code/euskal/src/services/aiService.ts)** - AI服务核心，实现了流式对话功能，包含超时控制和错误处理机制
+- **[App.tsx](file:///e:/Code/euskal/src/App.tsx)** - 主应用逻辑，管理应用状态和用户交互
+- **[foldartal.ts](file:///e:/Code/euskal/src/types/foldartal.ts)** - 类型定义，规范了密文板数据结构
 
-## 技术栈
+### 项目特色
+- 丰富的视觉资源：包含大量游戏风格的艺术素材和背景图片
+- 独特的萨米文字字体支持
+- 响应式设计适配不同设备
+- 神秘的北方冰原主题界面风格
 
-- React 18
-- Vite
-- Tailwind CSS
-- OpenAI GPT-4o-mini
+### 额外开发说明
 
-## 快速开始
+#### 密文板的设定
+图像，名称，神名，神谕
+其中神名有音译，直译，原文三种形式（实际上意译就是名称）
+每张密文板有一个类型（族群，灵魂，自然，世相，视相）
+密文板本身分为两类，布局（艾塔布局）和本因（法玛谋篇）
+密文板有价值，其值可能为8、12、16原石锭
+世相类密文板没有价值，不可回购，不提供馈赠
+本因密文板在与同类型布局密文板一同宣告时会触发协语（两个族群，或者两个灵魂，或者两个自然）
+视相密文板只有两个，都是布局型，与任意本因组合时必然触发协语。世相密文板只有两个，分别为布局型和本因型，且只能与对方组合，没有协语。
+密文板一般上下组合，上为布局，下为本因。
+选择密文板时，有概率触发修辞。
+修辞是随机附加在密文板上的额外特性，但伤痕和空无（世相类）密文板无法附加修辞。修辞有四种：
+    1. 延续：仅可能附加于布局。对布局造成“重复”的作用。
+    2. 自足：仅可能附加于本因。若触发协语，则对协语造成“强化”的作用。
+    3. 循环：仅可能附加于本因。若触发协语，则对协语造成“自指”的作用。
+    4. 广阔：仅可能附加于布局。对布局造成“扩散”的作用。
 
-### 1. 安装依赖
+#### 术语英文翻译表
+巴斯克 Euskal
+密文板 Foldartal
+布局 Layout 
+本因 Source 
+族群 Clan
+自然 Nature
+灵魂 Soul 
+视相 Vision
+世相 Society
+宣告 Declaration 
+协语 Concord 
+修辞 Flair
 
-```bash
-npm install
-```
+#### 配色系统
+荧光绿 #bcedf5 用于神奇，神秘，异能，神谕等相关概念
+冰雪白 #CDCFD5 用于萨米的自然，环境，通用背景
+深空蓝 #233340 用于萨米的深空，宏达，深邃，寒冷，通用背景
+族群红 #b83f38 族群类，下同
+自然绿 #34847c 
+灵魂蓝 #3473ab
+世相灰 #6e6d6e
+世相彩 background:conic-gradient(#c14141, #2a5778, #1e9782, #c14141); 用于世相相关的特种配色
+背景灰 #464646 用于局部通用背景，密文板等logo图像展示背景
+远山红 #902D46 “远山”的角色色之一，下同
+远山黑 #36262E
+远山粉 #EDDCD4
+灰雪白 #9ebbd7 用于密文板相关的的一般性文字，或Rune型文字，有雕刻感
 
-### 2. 配置环境变量
+一般强调：正面属性的强调的文字
+color: #e1f5fe;
+text-shadow: 0 0 3px #03a9f4, 0 0 5px black, 0 0 5px black;
 
-复制 `.env.example` 为 `.env` 并配置：
+荧光强调：
+适用于强调。荧光绿文字可加背景#5fb4cf 或 linear-gradient(45deg, #121c24, #5fb4cf)
 
-```env
-VITE_AI_API_KEY=your_api_key_here
-VITE_AI_BASE_URL=https://api.openai.com/v1
-```
-
-### 3. 启动开发服务器
-
-```bash
-npm run dev
-```
-
-### 4. 构建生产版本
-
-```bash
-npm run build
-```
-
-## 项目结构
-
-```
-euskal/
-├── src/
-│   ├── components/       # React 组件
-│   │   ├── Dialog/      # 对话模块
-│   │   ├── FoldartalSelection/  # 密文板选择
-│   │   ├── FoldartalDeclaration/ # 密文板宣告
-│   │   └── Menu/        # 菜单系统
-│   ├── data/            # 数据文件
-│   │   ├── foldartals.ts  # 密文板数据
-│   │   └── flairs.ts     # 修辞数据
-│   ├── services/        # 服务层
-│   │   └── aiService.ts  # AI 服务
-│   ├── types/           # 类型定义
-│   │   └── foldartal.ts
-│   ├── utils/           # 工具函数
-│   │   ├── foldartalLogic.ts  # 密文板逻辑
-│   │   └── prompts.ts         # AI 提示词
-│   ├── App.tsx          # 主应用
-│   ├── main.tsx         # 入口文件
-│   └── index.css       # 样式文件
-├── public/             # 静态资源
-│   ├── asset/           # 图片资源
-│   └── fonts/          # 字体文件
-├── package.json
-├── vite.config.js
-├── tailwind.config.js
-└── tsconfig.json
-```
-
-## 使用说明
-
-1. 输入您的称呼
-2. 选择布局密文板（艾塔布局）
-3. 选择本因密文板（法玛谋篇）
-4. 查看密文板宣告
-5. 与占卜师远山进行对话
-
-## 密文板规则
-
-- 世相类密文板只能与世相类密文板组合
-- 同类型密文板组合时触发协语
-- 世相类密文板无价值，不可回购
-
-## 字体
-
-项目使用萨米文字字体（FarNorthRunes），字体文件需从以下位置获取：
-
-https://prts.sh/wiki/微件:FarNorthRunesFonts
-
-下载后放置在 `public/fonts/` 目录下。
-
-## 版本
-
-v1.0.0
-
-## 许可证
-
-本项目仅供学习交流使用。
+标志卡片：
+加底的小logo（适用于标志用的少量文字，例如“修辞”，“协语”字样）
+background: linear-gradient(90deg, #4a7aad, #91dded);
+color: white;
+padding: 0px 5px;
+border-radius: 2px;

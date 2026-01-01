@@ -50,7 +50,7 @@ function App() {
 
   const handleSendMessage = (content, role = 'user') => {
     const newMessages = [...messages, { role, content }];
-    setMessages(newMessages);
+    setMessages([...newMessages, { role: 'assistant', content: '' }]);
     setIsLoading(true);
 
     let assistantMessage = '';
@@ -67,20 +67,22 @@ function App() {
       (error) => {
         console.error('AI Error:', error);
         setIsLoading(false);
-        setMessages([...newMessages, { role: 'assistant', content: '抱歉，我无法回应。请稍后再试。' }]);
+        const errorMessage = error.message === '连接超时' ? '连接超时，请稍后再试。' : '抱歉，我无法回应。请稍后再试。';
+        setMessages([...newMessages, { role: 'assistant', content: errorMessage }]);
       }
     );
   };
 
-  const handleSendMultipleMessages = (messageList: { role: 'user' | 'system', content: string }[]) => {
-    const newMessages = [...messages, ...messageList];
-    setMessages(newMessages);
+  const handleSendMultipleMessages = (messageList: { role: 'user' | 'system', content: string, visible?: boolean }[]) => {
+    const visibleMessages = messageList.filter(m => m.visible !== false);
+    const newMessages = [...messages, ...visibleMessages];
+    setMessages([...newMessages, { role: 'assistant', content: '' }]);
     setIsLoading(true);
 
     let assistantMessage = '';
     
     aiService.chat(
-      newMessages,
+      messageList,
       (chunk) => {
         assistantMessage += chunk;
         setMessages([...newMessages, { role: 'assistant', content: assistantMessage }]);
@@ -91,14 +93,10 @@ function App() {
       (error) => {
         console.error('AI Error:', error);
         setIsLoading(false);
-        setMessages([...newMessages, { role: 'assistant', content: '抱歉，我无法回应。请稍后再试。' }]);
+        const errorMessage = error.message === '连接超时' ? '连接超时，请稍后再试。' : '抱歉，我无法回应。请稍后再试。';
+        setMessages([...newMessages, { role: 'assistant', content: errorMessage }]);
       }
     );
-  };
-
-  const handleAbort = () => {
-    aiService.abort();
-    setIsLoading(false);
   };
 
   const handleUserNameChange = (newName) => {
@@ -162,7 +160,6 @@ function App() {
           onSendMessage={handleSendMessage}
           onSendMultipleMessages={handleSendMultipleMessages}
           isLoading={isLoading}
-          onAbort={handleAbort}
         />
       )}
       </div>

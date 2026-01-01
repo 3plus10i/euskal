@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Foldartal } from '../../types/foldartal';
 import { foldartals } from '../../data/foldartals';
 import { FoldartalPlaceholder } from './FoldartalPlaceholder';
+import { CardFront } from './FoldartalCard';
 import { Dialog } from '../Dialog/Dialog';
-import { createDeclaration } from '../../utils/foldartalLogic';
-import { createSystemPrompt, createInterpretationPrompt } from '../../utils/prompts';
+import { createDeclaration, getConcordType } from '../../utils/foldartalLogic';
+import { createSystemPrompt, createInitialInquiryPrompt } from '../../utils/prompts';
 
 interface FoldartalWorkspaceProps {
   userName: string;
   initialMessages: any[];
   onSendMessage: (content: string, role?: 'user' | 'system') => void;
-  onSendMultipleMessages: (messageList: { role: 'user' | 'system', content: string }[]) => void;
+  onSendMultipleMessages: (messageList: { role: 'user' | 'system', content: string, visible?: boolean }[]) => void;
   isLoading: boolean;
-  onAbort: () => void;
 }
 
 interface StoredDeclaration {
@@ -23,43 +23,9 @@ interface StoredDeclaration {
   sourceRhetoric: string;
 }
 
-function FoldartalDisplay({ foldartal, position, animate }: { foldartal: Foldartal; position: 'layout' | 'source'; animate: boolean }) {
-  const imagePath = `/asset/foldartals/${foldartal.id}_${foldartal.name}.png`;
-  const positionText = position === 'layout' ? '布局' : '本因';
 
-  return (
-    <div className={`flex flex-col items-center space-y-2 ${animate ? 'animate-reveal' : ''}`}>
-      <div className="relative w-52 h-80 rounded-xl overflow-hidden">
-        <img
-          src="/asset/卡片背景504x792.jpg"
-          alt="卡片背景"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        
-        <div className="absolute inset-0 flex flex-col items-center justify-between p-4 z-10">
-          <div className="text-center">
-            <p className="text-base text-sammi-snow font-bold">{foldartal.nameRune}</p>
-          </div>
-          
-          <div className="flex items-center justify-center">
-            <img
-              src={imagePath}
-              alt={foldartal.name}
-              className="w-28 h-28 object-contain"
-            />
-          </div>
-          
-          <div className="text-center space-y-0.5">
-            <p className="text-sm text-sammi-snow/70">{foldartal.type} - {foldartal.name}</p>
-            <p className="text-xs text-sammi-snow/50 font-mono">{foldartal.nameEn}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
-export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, onSendMultipleMessages, isLoading, onAbort }: FoldartalWorkspaceProps) {
+export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, onSendMultipleMessages, isLoading }: FoldartalWorkspaceProps) {
   const [selectedLayout, setSelectedLayout] = useState<Foldartal | null>(null);
   const [selectedSource, setSelectedSource] = useState<Foldartal | null>(null);
   const [declared, setDeclared] = useState(false);
@@ -108,7 +74,7 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
       setInterpretationSent(true);
       
       const systemPrompt = createSystemPrompt(userName);
-      const interpretationPrompt = createInterpretationPrompt(
+      const initialInquiryPrompt = createInitialInquiryPrompt(
         userName,
         selectedLayout.name,
         selectedSource.name,
@@ -120,8 +86,8 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
       );
       
       onSendMultipleMessages([
-        { role: 'system', content: systemPrompt.content },
-        { role: 'user', content: interpretationPrompt.content }
+        { role: 'system', content: systemPrompt.content, visible: false },
+        { role: 'user', content: initialInquiryPrompt.content, visible: false }
       ]);
     }
   };
@@ -145,21 +111,22 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
   const declaration = selectedLayout && selectedSource ? createDeclaration(selectedLayout.id, selectedSource.id) : null;
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <div className="flex-shrink-0 p-6 relative z-10">
-        <img
-          src="/asset/布局密文板的背景图形.png"
-          alt="布局背景图形"
-          className="absolute left-0 top-0 h-full w-1/2 object-contain opacity-50 pointer-events-none z-0"
-        />
-        <img
-          src="/asset/本因密文板的背景图形.png"
-          alt="本因背景图形"
-          className="absolute right-0 top-0 h-full w-1/2 object-contain opacity-50 pointer-events-none z-0"
-        />
+    <div className="flex flex-col h-screen overflow-hidden relative">
+      <img
+        src="/asset/布局密文板的背景图形.png"
+        alt="布局背景图形"
+        className="absolute left-[12.5%] top-0 w-[25%] h-auto object-contain opacity-50 pointer-events-none z-0"
+      />
+      <img
+        src="/asset/本因密文板的背景图形.png"
+        alt="本因背景图形"
+        className="absolute left-[62.5%] top-0 w-[25%] h-auto object-contain opacity-50 pointer-events-none z-0"
+      />
+
+      <div className="h-[40%] p-6 relative z-10">
         <div className="text-center space-y-3 mb-6">
           <div className="flex items-center justify-center gap-2">
-            <p className="text-xl text-sammi-snow/80">欢迎，{userName}</p>
+            <p className="text-2xl font-bold text-sammi-glow tracking-wide">欢迎你，探索者 {userName}</p>
             <button
               onClick={handleEditUserName}
               className="text-sammi-snow/60 hover:text-sammi-glow transition-colors"
@@ -170,31 +137,29 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
               </svg>
             </button>
           </div>
-          <h1 className="text-3xl font-bold text-sammi-glow tracking-wide">密文板占卜</h1>
-          <p className="text-sammi-snow/60 text-base">选择布局与本因，揭示命运的启示</p>
         </div>
 
         {editingUserName && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-sammi-soul/90 p-6 rounded-xl space-y-4">
+            <div className="ice-glass p-6 rounded-xl space-y-4">
               <h3 className="text-lg font-bold text-sammi-snow">修改用户名</h3>
               <input
                 type="text"
                 value={tempUserName}
                 onChange={(e) => setTempUserName(e.target.value)}
-                className="w-full px-4 py-2 bg-sammi-snow/20 text-sammi-snow rounded-lg focus:outline-none focus:ring-2 focus:ring-sammi-glow"
+                className="w-full ice-glass px-4 py-2 text-sammi-snow focus:outline-none focus:ring-2 focus:ring-sammi-glow"
                 autoFocus
               />
               <div className="flex gap-3 justify-end">
                 <button
                   onClick={handleCancelUserName}
-                  className="px-4 py-2 bg-sammi-snow/20 hover:bg-sammi-snow/30 text-sammi-snow rounded-lg transition-colors"
+                  className="ice-glass px-4 py-2 hover:bg-sammi-snow/30 text-sammi-snow transition-colors"
                 >
                   取消
                 </button>
                 <button
                   onClick={handleSaveUserName}
-                  className="px-4 py-2 bg-sammi-yuan-red hover:bg-sammi-yuan-red/80 text-sammi-ice rounded-lg transition-colors"
+                  className="ice-glass px-4 py-2 hover:bg-sammi-yuan-red/80 text-sammi-ice transition-colors"
                 >
                   保存
                 </button>
@@ -204,49 +169,52 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
         )}
 
         {!declared ? (
-          <div className="flex flex-col items-center space-y-6">
-            <div className="flex justify-center items-start gap-20">
-              <FoldartalPlaceholder
-                type="layout"
-                selected={selectedLayout !== null}
-                onClick={handleLayoutClick}
-              />
-              
-              <FoldartalPlaceholder
-                type="source"
-                selected={selectedSource !== null}
-                onClick={handleSourceClick}
-              />
-            </div>
+          <div className="flex justify-center items-center gap-20">
+            <FoldartalPlaceholder
+              type="layout"
+              selected={selectedLayout !== null}
+              onClick={handleLayoutClick}
+            />
 
             <button
               onClick={handleDeclare}
               disabled={!selectedLayout || !selectedSource}
               className={`
-                px-10 py-4 text-lg font-bold rounded-full transition-all duration-500
+                px-10 py-4 text-lg font-bold rounded-full transition-all duration-500 relative overflow-hidden
                 ${!selectedLayout || !selectedSource
                   ? 'bg-sammi-soul/20 text-sammi-snow/30 cursor-not-allowed'
                   : 'bg-sammi-yuan-red hover:bg-sammi-yuan-red/80 text-sammi-ice'
                 }
               `}
+              style={{
+                backgroundImage: selectedLayout && selectedSource ? 'url(/asset/资料背景素材小图腾1x1.png)' : 'none',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center'
+              }}
             >
-              开始宣读
+              <span className="relative z-10">开始宣读</span>
             </button>
+
+            <FoldartalPlaceholder
+              type="source"
+              selected={selectedSource !== null}
+              onClick={handleSourceClick}
+            />
           </div>
         ) : (
           <div className="flex flex-col items-center space-y-6">
-            <div className="flex justify-center items-center gap-8 w-full max-w-4xl">
+            <div className="flex justify-center items-center gap-8 w-full max-w-6xl">
               {declaration && (
                 <>
                   <div className="flex-1 flex justify-end">
-                    <div className="text-right space-y-1 max-w-[280px]">
+                    <div className="text-right space-y-1 max-w-lg">
                       <p className="text-sm text-sammi-snow/60 italic leading-relaxed">
                         {declaration.layout.motto}
                       </p>
                     </div>
                   </div>
                   
-                  <FoldartalDisplay foldartal={declaration.layout} position="layout" animate={true} />
+                  <CardFront foldartal={declaration.layout} position="layout" animate={true} />
                   
                   <div className="flex flex-col items-center justify-center space-y-3">
                     <div className="text-center space-y-1">
@@ -254,10 +222,24 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
                       <p className="text-sm text-sammi-snow">{storedDeclaration?.layoutRhetoric || '无'} · {storedDeclaration?.sourceRhetoric || '无'}</p>
                     </div>
                     
-                    <div className="text-center space-y-1">
-                      <p className="text-xs text-sammi-glow/70">协语</p>
-                      <p className="text-xl font-bold text-sammi-glow">{declaration.concord}</p>
-                    </div>
+                    {declaration.concord && declaration.concord !== '无' && (
+                      <div className="text-center space-y-1">
+                        <div className="flex items-center justify-center gap-2">
+                          <p className="text-xs text-sammi-glow/70">协语</p>
+                          <p className="text-xl font-bold text-sammi-glow">{declaration.concord}</p>
+                        </div>
+                        {declaration.layout.type !== '世相' && declaration.source.type !== '世相' && (
+                          <div className="flex items-center justify-center gap-2">
+                            <img
+                              src={`/asset/${getConcordType(declaration.layout, declaration.source)}logo1x1.png`}
+                              alt={getConcordType(declaration.layout, declaration.source)}
+                              className="w-6 h-6 object-contain"
+                            />
+                            <p className="text-xs text-sammi-snow/60">{getConcordType(declaration.layout, declaration.source)}</p>
+                          </div>
+                        )}
+                      </div>
+                    )}
 
                     {declaration.layout.chant && (
                       <div className="text-center max-w-xs">
@@ -276,10 +258,10 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
                     )}
                   </div>
 
-                  <FoldartalDisplay foldartal={declaration.source} position="source" animate={true} />
+                  <CardFront foldartal={declaration.source} position="source" animate={true} />
                   
                   <div className="flex-1 flex justify-start">
-                    <div className="text-left space-y-1 max-w-[280px]">
+                    <div className="text-left space-y-1 max-w-lg">
                       <p className="text-sm text-sammi-snow/60 italic leading-relaxed">
                         {declaration.source.motto}
                       </p>
@@ -292,12 +274,19 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
         )}
       </div>
 
-      <div className="flex-1 min-h-0">
+      <div className="flex items-center justify-center py-2">
+        <img
+          src="/asset/素材横向分割线B423x24.png"
+          alt="分隔装饰"
+          className="h-4 w-auto object-contain"
+        />
+      </div>
+
+      <div className="h-[60%] min-h-0 relative z-10">
         <Dialog
           messages={messages.filter(m => m.role !== 'system')}
           onSendMessage={onSendMessage}
           isLoading={isLoading}
-          onAbort={onAbort}
         />
       </div>
     </div>

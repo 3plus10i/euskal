@@ -37,6 +37,45 @@ export function createSystemPrompt(userName: string): Message {
   };
 }
 
+export function createInitialInquiryPrompt(
+  userName: string,
+  layoutName: string,
+  sourceName: string,
+  concord: string,
+  layoutGod: string,
+  sourceGod: string,
+  layoutMotto: string,
+  sourceMotto: string
+): Message {
+  let prompt = `探索者${userName}刚刚选择了两块密文板进行宣告。
+
+布局密文板：${layoutName}（主神：${layoutGod}）
+本因密文板：${sourceName}（主神：${sourceGod}）`;
+
+  if (concord) {
+    prompt += `\n协语：${concord}`;
+  }
+
+  prompt += `
+
+${layoutGod}的箴言：${layoutMotto}
+${sourceGod}的箴言：${sourceMotto}
+
+现在，请以远山的身份，主动向探索者发起一个关于这两块密文板的询问。这个询问应该：
+1. 引导探索者思考这两块密文板对他/她的意义
+2. 不要直接解读密文板的含义，而是提出一个开放性的问题
+3. 用温和、神秘的语气，符合远山的角色设定
+4. 问题应该与探索者的生活、困惑或期待相关
+5. 让探索者感到被理解和关注
+
+请只返回这个询问，不要进行任何解读或说明。`;
+
+  return {
+    role: 'user',
+    content: prompt
+  };
+}
+
 export function createInterpretationPrompt(
   userName: string,
   layoutName: string,

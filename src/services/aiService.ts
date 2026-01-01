@@ -3,6 +3,7 @@ const MODEL = 'Pro/deepseek-ai/DeepSeek-V3.2';
 export interface Message {
   role: 'system' | 'user' | 'assistant';
   content: string;
+  visible?: boolean;
 }
 
 export interface AIResponse {
@@ -36,6 +37,10 @@ export class AIService {
     }
 
     this.abortController = new AbortController();
+    const timeoutId = setTimeout(() => {
+      this.abortController?.abort();
+      onError(new Error('连接超时'));
+    }, 25000);
 
     try {
       const response = await fetch(`${this.baseUrl}/chat/completions`, {
@@ -51,6 +56,8 @@ export class AIService {
         }),
         signal: this.abortController.signal
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         throw new Error(`AI API error: ${response.status}`);
@@ -98,6 +105,7 @@ export class AIService {
         }
       }
     } catch (error) {
+      clearTimeout(timeoutId);
       if (error instanceof Error && error.name === 'AbortError') {
         return;
       }

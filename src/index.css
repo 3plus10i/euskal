@@ -2,6 +2,135 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-fluorescent-green: #bcedf5;
+  --color-ice-white: #CDCFD5;
+  --color-deep-space-blue: #233340;
+  --color-clan-red: #b83f38;
+  --color-nature-green: #34847c;
+  --color-soul-blue: #3473ab;
+  --color-world-gray: #6e6d6e;
+  --color-world-gradient: conic-gradient(#c14141, #2a5778, #1e9782, #c14141);
+  --color-bg-gray: #464646;
+  --color-yuan-red: #902D46;
+  --color-yuan-black: #36262E;
+  --color-yuan-pink: #EDDCD4;
+  --color-gray-snow: #9ebbd7;
+}
+
+@layer components {
+  .ice-glass {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(205, 207, 213, 0.2) 100%
+    );
+    backdrop-filter: blur(10px);
+    border-radius: 0.5rem;
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.1),
+      0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ice-glass-variant {
+    background: rgba(35, 51, 64, 0.4);
+    backdrop-filter: blur(8px);
+    border-radius: 0.5rem;
+    box-shadow: 0 0 12px rgba(35, 51, 64, 0.2), inset 0 0 20px rgba(35, 51, 64, 0.1);
+    border: 1px solid rgba(35, 51, 64, 0.3);
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeOutUp {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-5px);
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 0.3s ease-out forwards;
+  }
+
+  .animate-fade-out-up {
+    animation: fadeOutUp 0.3s ease-in forwards;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 1s ease-out forwards;
+  }
+
+  .animate-fade-out {
+    animation: fadeOut 1s ease-in forwards;
+  }
+
+  .text-emphasis {
+    color: var(--color-fluorescent-green);
+    text-shadow: 0 0 3px var(--color-soul-blue), 0 0 5px black, 0 0 5px black;
+  }
+
+  .text-glow-emphasis {
+    background: linear-gradient(45deg, var(--color-deep-space-blue), #5fb4cf);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .badge-card {
+    background: linear-gradient(90deg, var(--color-soul-blue), var(--color-fluorescent-green));
+    color: white;
+    padding: 0px 5px;
+    border-radius: 2px;
+  }
+
+  .text-world-gradient {
+    background: var(--color-world-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .font-serif-message {
+    font-family: 'Georgia', 'Times New Roman', 'Songti SC', 'SimSun', serif;
+    letter-spacing: 0.02em;
+  }
+}
+
 @font-face {
   font-family: 'FarNorthRunes-Regular';
   font-style: normal;
