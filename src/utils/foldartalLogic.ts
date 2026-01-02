@@ -109,8 +109,9 @@ export function getRandomFlair(foldartal: Foldartal): FlairType {
 }
 
 export function getRandomRhetoric(foldartal: Foldartal): FlairType {
-  const cannotHaveRhetoric = ['伤痕', '空无'];
-  if (cannotHaveRhetoric.includes(foldartal.name)) {
+  // 修辞触发概率
+  const triggerProbability = 0.2;
+  if (Math.random() > triggerProbability) {
     return null;
   }
 
@@ -121,11 +122,6 @@ export function getRandomRhetoric(foldartal: Foldartal): FlairType {
   const validFlairs = flairs.filter(f => f.type === foldartal.category);
 
   if (validFlairs.length === 0) {
-    return null;
-  }
-
-  const triggerProbability = 0.2;
-  if (Math.random() > triggerProbability) {
     return null;
   }
 

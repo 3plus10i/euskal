@@ -99,7 +99,7 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
         />
       </div>
 
-      <div className="w-[50%] flex flex-col p-6 mr-[20%]">
+      <div className="w-[50%] flex flex-col p-6 max-w-[900px]">
         <div className="flex-1 overflow-y-auto space-y-4 pr-2 no-scrollbar">
           {messagesToRender.map((message, index) => (
             <div key={index} className="ice-glass p-4">
