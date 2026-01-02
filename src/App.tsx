@@ -43,6 +43,7 @@ function App() {
     return backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
   });
   const [debugMode, setDebugMode] = useState(false); // 调试模式开关，开启后静态呈现所有元素
+  const [isDoubleSociety, setIsDoubleSociety] = useState(false);
 
   useEffect(() => {
     localStorage.setItem('userName', userName);
@@ -228,6 +229,7 @@ function App() {
             isWaitingForResponse={isWaitingForResponse}
             onUserNameChange={setUserName}
             debugMode={debugMode}
+            onDoubleSocietyTriggered={() => setIsDoubleSociety(true)}
           />
         </>
       )}

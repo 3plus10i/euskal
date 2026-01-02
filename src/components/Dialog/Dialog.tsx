@@ -4,24 +4,27 @@ import remarkGfm from 'remark-gfm';
 import { aiService } from '../../services/aiService';
 import { Message } from '../../services/aiService';
 
-export function Dialog({ messages, onSendMessage, isLoading, isWaitingForResponse }: {
+export function Dialog({ messages, onSendMessage, isLoading, isWaitingForResponse, isDoubleSociety = false }: {
   messages: Message[];
   onSendMessage: (content: string) => void;
   isLoading: boolean;
   isWaitingForResponse: boolean;
+  isDoubleSociety?: boolean;
 }) {
   const [input, setInput] = useState('');
   const [dotCount, setDotCount] = useState(1);
   const [portraitIndex, setPortraitIndex] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [opacity, setOpacity] = useState(1);
+  const [isPriestessMode, setIsPriestessMode] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const portraits = [
     '/asset/立绘_远山_1.png',
     '/asset/立绘_远山_2.png',
-    '/asset/立绘_远山_skin1.png'
+    '/asset/立绘_远山_skin1.png',
+    '/asset/Priestess.png'
   ];
 
   const switchToNextPortrait = () => {
@@ -31,7 +34,7 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
     setOpacity(0);
     
     setTimeout(() => {
-      setPortraitIndex((prev) => (prev + 1) % portraits.length);
+      setPortraitIndex((prev) => (prev + 1) % (portraits.length+1)); // 正常情况永远跳过最后一个
       setOpacity(1);
       
       setTimeout(() => {
@@ -41,6 +44,7 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
   };
 
   const handlePortraitClick = () => {
+    if (isPriestessMode) return;
     switchToNextPortrait();
   };
 
@@ -56,12 +60,34 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
   }, [isLoading]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      switchToNextPortrait();
-    }, 60000); // 每分钟自动切换一次立绘
+    if (isDoubleSociety && !isPriestessMode) {
+      const timer = setTimeout(() => {
+        setIsTransitioning(true);
+        setOpacity(0);
+        
+        setTimeout(() => {
+          setPortraitIndex(3);
+          setIsPriestessMode(true);
+          setOpacity(1);
+          
+          setTimeout(() => {
+            setIsTransitioning(false);
+          }, 1000);
+        }, 1000);
+      }, 5000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isDoubleSociety, isPriestessMode]);
 
-    return () => clearInterval(interval);
-  }, []);
+  useEffect(() => {
+    if (!isPriestessMode) {
+      const interval = setInterval(() => {
+        switchToNextPortrait();
+      }, 60000);
+      return () => clearInterval(interval);
+    }
+  }, [isPriestessMode]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });

@@ -18,6 +18,7 @@ interface FoldartalWorkspaceProps {
   isWaitingForResponse: boolean;
   onUserNameChange: (newName: string) => void;
   debugMode?: boolean;
+  onDoubleSocietyTriggered?: () => void;
 }
 
 export interface StoredDeclaration {
@@ -30,7 +31,7 @@ export interface StoredDeclaration {
 
 
 
-export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, onSendMultipleMessages, isLoading, isWaitingForResponse, onUserNameChange, debugMode = false }: FoldartalWorkspaceProps) {
+export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, onSendMultipleMessages, isLoading, isWaitingForResponse, onUserNameChange, debugMode = false, onDoubleSocietyTriggered }: FoldartalWorkspaceProps) {
   const [selectedLayout, setSelectedLayout] = useState<Foldartal | null>(null);
   const [selectedSource, setSelectedSource] = useState<Foldartal | null>(null);
   const [declared, setDeclared] = useState(false);
@@ -135,6 +136,10 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
       setStoredDeclaration(newStoredDeclaration);
       setDeclared(true);
       setInterpretationSent(true);
+      
+      if (onDoubleSocietyTriggered && selectedLayout.type === '世相' && selectedSource.type === '世相') {
+        onDoubleSocietyTriggered();
+      }
       
       const customTone = localStorage.getItem('customTone');
       const systemPrompt = createSystemPrompt(userName, customTone);
@@ -242,6 +247,10 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
           onSendMessage={onSendMessage}
           isLoading={isLoading}
           isWaitingForResponse={isWaitingForResponse}
+          isDoubleSociety={onDoubleSocietyTriggered ? (() => {
+            const hasDoubleSociety = selectedLayout?.type === '世相' && selectedSource?.type === '世相';
+            return hasDoubleSociety && declared;
+          })() : false}
         />
       </div>
 
