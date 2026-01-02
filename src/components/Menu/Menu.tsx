@@ -1,28 +1,5 @@
 import React, { useState } from 'react';
 
-// export function MenuButton({ onClick }: { onClick: () => void }) {
-//   return (
-//     <button
-//       onClick={onClick}
-//       className="fixed md:bottom-6 bottom-20 left-4 z-50 md:p-3 p-2 ice-glass-b1 hover:bg-sammi-snow/30 transition-colors cursor-pointer"
-//     >
-//       <svg
-//         className="w-4 h-4 text-sammi-glow"
-//         fill="none"
-//         stroke="currentColor"
-//         viewBox="0 0 24 24"
-//       >
-//         <path
-//           strokeLinecap="round"
-//           strokeLinejoin="round"
-//           strokeWidth={2}
-//           d="M4 6h16M4 12h16M4 18h16"
-//         />
-//       </svg>
-//     </button>
-//   );
-// }
-
 export function MenuModal({ isOpen, onClose, activeTab, onTabChange, userName, onUserNameChange, onReset }: {
   isOpen: boolean;
   onClose: () => void;
@@ -135,7 +112,6 @@ export function MenuModal({ isOpen, onClose, activeTab, onTabChange, userName, o
                   <li>• 凯宁嘉修辞：概率附加于任意密文板的额外效果。</li>
                 </ul>
               </p>
-              {/* 这里增加一条细细的冰色分割线 */}
               <hr className="border-sammi-ice/20" />
               <p className="text-sammi-ice leading-relaxed">
                 深入研究：
@@ -189,7 +165,6 @@ export function MenuModal({ isOpen, onClose, activeTab, onTabChange, userName, o
                 <div className="border-l-2 border-sammi-glow pl-4">
                   <div className="flex items-center gap-3 mb-2">
                     <span className="text-lg font-bold text-sammi-glow">v1.1</span>
-                    {/* <span className="text-sm text-sammi-ice/50">2026-01-02</span> */}
                   </div>
                   <ul className="space-y-2 text-sammi-ice/80 text-sm">
                     <li>• 移动端适配完成</li>
@@ -198,6 +173,16 @@ export function MenuModal({ isOpen, onClose, activeTab, onTabChange, userName, o
                 </div>
               </div>
 
+              <div className="space-y-4">
+                <div className="border-l-2 border-sammi-glow pl-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="text-lg font-bold text-sammi-glow">v1.2</span>
+                  </div>
+                  <ul className="space-y-2 text-sammi-ice/80 text-sm">
+                    <li>• 优化用户界面和交互体验</li>
+                  </ul>
+                </div>
+              </div>
 
             </div>
           )}

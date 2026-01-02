@@ -7,7 +7,7 @@ export function Footer({ onAboutClick, onSettingsClick, onVersionClick }: {
 }) {
   return (
     <footer className="fixed bottom-0 left-0 right-0 z-50 ice-glass rounded-none"> 
-      <div className="flex items-center justify-between px-4 py-3 md:px-6 md:py-4">
+      <div className="flex items-center justify-between px-4 py-2 md:px-6 md:py-4">
         <div className="flex gap-4 md:gap-6">
           <button
             onClick={onAboutClick}

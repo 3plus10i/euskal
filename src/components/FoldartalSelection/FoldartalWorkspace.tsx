@@ -214,9 +214,8 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
   };
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden relative justify-center">
-      {/* h-[45vh]  */}
-      <div className="px-6 pt-6 relative z-10">
+    <div className="flex flex-col h-full overflow-hidden relative justify-evenly">
+      <div className="px-6 pt-6 relative z-10 flex-shrink-0">
         {!declared ? (
           <PreDeclarationView
             selectedLayout={selectedLayout}
@@ -234,7 +233,7 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
         ) : null}
       </div>
 
-      <div className="flex items-center justify-center py-2 z-10">
+      <div className="flex items-center justify-center py-2 z-10 flex-shrink-0">
         <img
           src="/asset/素材横向分割线B1269x24.png"
           alt="分隔装饰"
@@ -242,8 +241,7 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
         />
       </div>
 
-      {/* h-[60vh]  */}
-      <div className="min-h-0 relative z-10">
+      <div className="flex-1 min-h-0 relative md:mb-16 mb-10 z-10">
         <Dialog
           messages={messages.filter(m => m.role !== 'system')}
           onSendMessage={onSendMessage}

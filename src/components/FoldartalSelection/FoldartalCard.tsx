@@ -80,7 +80,7 @@ export function CardFront({ foldartal, position, animate = false }: CardFrontPro
       />
       
       <div className="absolute inset-0 z-10">
-        <div className="absolute top-[6%] left-1/2 -translate-x-1/2 text-center">
+        <div className="absolute top-[2%] left-1/2 -translate-x-1/2 text-center">
           <p className="text-[clamp(10px,3vw,24px)] font-medium text-sammi-snow">
             {foldartal.nameRune.replace(/[\[\]]/g, '')}
           </p>
@@ -114,7 +114,8 @@ export function CardFront({ foldartal, position, animate = false }: CardFrontPro
   );
 
   return (
-    <div className={`flex flex-col items-center space-y-2 h-full mb-6 justify-center ${animate ? 'animate-reveal' : ''}`}>
+    // 高度用clamp
+    <div className={`flex flex-col items-center space-y-2 h-[clamp(60px,30vh,300px)] mb-6 min-w-[85px] justify-center ${animate ? 'animate-reveal' : ''}`}>
       {cardContent}
       <div className="absolute md:-bottom-6 -bottom-4 left-1/2 -translate-x-1/2 text-center">
         <p className="text-[clamp(8px,1.5vw,14px)] text-sammi-snow/60">

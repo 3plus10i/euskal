@@ -28,7 +28,7 @@ const backgroundImages = [
 ];
 
 function App() {
-  const [debugMode, setDebugMode] = useState(true); // 调试模式开关，开启后静态呈现所有元素
+  const [debugMode, setDebugMode] = useState(false); // 调试模式开关，开启后静态呈现所有元素
 
   const [userName, setUserName] = useState(() => {
     const saved = localStorage.getItem('userName');
@@ -163,9 +163,7 @@ function App() {
   };
 
   return (
-    // 背景图
-    <div 
-      className="min-h-screen text-sammi-ice"
+    <div className="h-screen overflow-hidden text-sammi-ice"
       style={{
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: 'cover',
@@ -174,9 +172,7 @@ function App() {
         backgroundAttachment: 'fixed'
       }}
     >
-      {/* 主体内容区域 */}
-      {/* fot test: 去掉了min-h-screen  */}
-      <div className="bg-gradient-to-b from-sammi-deep/80 to-sammi-bg/90">
+      <div className="h-full flex flex-col bg-gradient-to-b from-sammi-deep/80 to-sammi-bg/90">
         <MenuModal
           isOpen={menuOpen}
           onClose={() => setMenuOpen(false)}
@@ -188,7 +184,7 @@ function App() {
         />
 
       {stage === AppStage.GREETING && (
-        <div className="flex flex-col items-center justify-center min-h-screen space-y-8 md:space-y-12 px-4">
+        <div className="flex flex-col items-center justify-center h-full space-y-8 md:space-y-12 px-4">
           <div className="text-center space-y-4 md:space-y-6">
             <h1 className="text-3xl md:text-6xl font-bold text-sammi-glow tracking-wide">远山的密文板占卜小屋</h1>
             <p className="text-sammi-ice/70 text-base md:text-xl max-w-2xl leading-relaxed">
@@ -211,8 +207,7 @@ function App() {
       )}
 
       {stage === AppStage.WORKSPACE && (
-        <>
-          {/* 布局密文板的背景图形 */}
+        <div className="flex-1 flex flex-col overflow-hidden relative">
           <img
             src="/asset/布局密文板的背景图形.png"
             alt="布局背景图形"
@@ -235,7 +230,7 @@ function App() {
             debugMode={debugMode}
             onDoubleSocietyTriggered={() => setIsDoubleSociety(true)}
           />
-        </>
+        </div>
       )}
       </div>
       <Footer

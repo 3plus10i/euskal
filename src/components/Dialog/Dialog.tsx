@@ -127,7 +127,6 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
 
   return (
     <div className="relative flex flex-col md:flex-row h-full w-full">
-      {/* 立绘区域：移动端绝对定位作为背景衬底，桌面端左侧固定宽度 */}
       <div className="absolute inset-0 flex items-center justify-center md:relative md:inset-auto md:w-[40vw] md:flex md:items-center md:justify-end">
         <img
           src={portraits[portraitIndex]}
@@ -138,10 +137,8 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
         />
       </div>
 
-      {/* 消息区域：移动端相对定位半透明背景，桌面端右侧固定宽度 */}
-      <div className="relative z-10 flex-1 flex flex-col p-4 md:p-6 md:w-[50vw] md:bg-transparent" style={{ background: 'linear-gradient(to bottom,transparent 0%,rgba(0, 0, 0, 0.25) 15%,rgba(0, 0, 0, 0.25) 85%,transparent 100%)' }}>
-        {/* no-scrollbar */}
-        <div className="flex-1 overflow-y-auto space-y-4 pr-2">
+      <div className="relative z-10 flex-1 flex flex-col p-4 md:p-6 md:w-[50vw] md:bg-transparent h-full" style={{ background: 'linear-gradient(to bottom,transparent 0%,rgba(0, 0, 0, 0.25) 15%,rgba(0, 0, 0, 0.25) 85%,transparent 100%)' }}>
+        <div className="flex-1 min-h-0 overflow-y-auto space-y-4 pr-2" style={{ scrollbarWidth: 'none' }}>
           {messagesToRender.map((message, index) => (
             <div key={index} className="ice-glass-b1 p-4">
               <div className="text-sammi-snow font-bold text-sm mb-2">
@@ -171,7 +168,7 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
           <div ref={messagesEndRef} />
         </div>
 
-        <form onSubmit={handleSubmit} className="flex gap-2 md:h-16 h-12 mt-4">
+        <form onSubmit={handleSubmit} className="flex-shrink-0 flex gap-2 md:h-16 h-12 mt-4">
           <input
             type="text"
             value={input}
