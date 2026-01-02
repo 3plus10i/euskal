@@ -34,7 +34,7 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
     setOpacity(0);
     
     setTimeout(() => {
-      setPortraitIndex((prev) => (prev + 1) % (portraits.length+1)); // 正常情况永远跳过最后一个
+      setPortraitIndex((prev) => (prev + 1) % (portraits.length-1)); // 正常情况永远跳过最后一个
       setOpacity(1);
       
       setTimeout(() => {
@@ -139,14 +139,15 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
       </div>
 
       {/* 消息区域：移动端相对定位半透明背景，桌面端右侧固定宽度 */}
-      <div className="relative z-10 flex-1 flex flex-col p-4 md:p-6 md:w-[50vw] bg-black/30 md:bg-transparent">
-        <div className="flex-1 overflow-y-auto space-y-4 pr-2 no-scrollbar">
+      <div className="relative z-10 flex-1 flex flex-col p-4 md:p-6 md:w-[50vw] md:bg-transparent" style={{ background: 'linear-gradient(to bottom,transparent 0%,rgba(0, 0, 0, 0.25) 15%,rgba(0, 0, 0, 0.25) 85%,transparent 100%)' }}>
+        {/* no-scrollbar */}
+        <div className="flex-1 overflow-y-auto space-y-4 pr-2">
           {messagesToRender.map((message, index) => (
             <div key={index} className="ice-glass-b1 p-4">
-              <div className="text-sammi-glow font-bold text-sm mb-2">
+              <div className="text-sammi-snow font-bold text-sm mb-2">
                 {getSpeakerName(message.role)}
               </div>
-              <div className="text-sammi-snow leading-relaxed whitespace-normal font-serif-message text-sm prose prose-invert max-w-none">
+              <div className="text-sammi-glow leading-relaxed whitespace-normal font-serif-message text-sm prose prose-invert max-w-none">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                   {message.content}
                 </ReactMarkdown>
@@ -156,10 +157,10 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
           
           {shouldShowPlaceholder && (
             <div className="ice-glass-b1 p-4">
-              <div className="text-sammi-glow font-bold text-sm mb-2">
+              <div className="text-sammi-snow font-bold text-sm mb-2">
                 远山
               </div>
-              <div className="text-sammi-snow/70 leading-relaxed whitespace-normal font-serif-message">
+              <div className="text-sammi-glow leading-relaxed whitespace-normal font-serif-message">
                 <div className="flex items-center gap-2">
                   <span >嗯{'.'.repeat(dotCount)}</span>
                 </div>

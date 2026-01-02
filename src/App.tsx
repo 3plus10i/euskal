@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { MenuButton, MenuModal } from './components/Menu/Menu';
+import { MenuModal } from './components/Menu/Menu';
+import { Footer } from './components/Footer/Footer';
 import { FoldartalWorkspace } from './components/FoldartalSelection/FoldartalWorkspace';
 import { aiService, Message } from './services/aiService';
 import { createWelcomeMessage } from './utils/prompts';
@@ -23,10 +24,12 @@ const backgroundImages = [
   '/asset/素材背景被遗忘的银白.png',
   '/asset/素材背景群山之间.png',
   '/asset/素材背景远山极光.jpg',
-  '/asset/素材背景冰封.jpg'
+  // '/asset/素材背景冰封.jpg'
 ];
 
 function App() {
+  const [debugMode, setDebugMode] = useState(true); // 调试模式开关，开启后静态呈现所有元素
+
   const [userName, setUserName] = useState(() => {
     const saved = localStorage.getItem('userName');
     return saved || '';
@@ -42,7 +45,6 @@ function App() {
   const [backgroundImage, setBackgroundImage] = useState(() => {
     return backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
   });
-  const [debugMode, setDebugMode] = useState(false); // 调试模式开关，开启后静态呈现所有元素
   const [isDoubleSociety, setIsDoubleSociety] = useState(false);
 
   useEffect(() => {
@@ -161,6 +163,7 @@ function App() {
   };
 
   return (
+    // 背景图
     <div 
       className="min-h-screen text-sammi-ice"
       style={{
@@ -171,7 +174,9 @@ function App() {
         backgroundAttachment: 'fixed'
       }}
     >
-      <div className="min-h-screen bg-gradient-to-b from-sammi-deep/80 to-sammi-bg/90">
+      {/* 主体内容区域 */}
+      {/* fot test: 去掉了min-h-screen  */}
+      <div className="bg-gradient-to-b from-sammi-deep/80 to-sammi-bg/90">
         <MenuModal
           isOpen={menuOpen}
           onClose={() => setMenuOpen(false)}
@@ -207,7 +212,6 @@ function App() {
 
       {stage === AppStage.WORKSPACE && (
         <>
-          <MenuButton onClick={() => setMenuOpen(true)} />
           {/* 布局密文板的背景图形 */}
           <img
             src="/asset/布局密文板的背景图形.png"
@@ -234,6 +238,20 @@ function App() {
         </>
       )}
       </div>
+      <Footer
+        onAboutClick={() => {
+          setMenuTab('about');
+          setMenuOpen(true);
+        }}
+        onSettingsClick={() => {
+          setMenuTab('settings');
+          setMenuOpen(true);
+        }}
+        onVersionClick={() => {
+          setMenuTab('version');
+          setMenuOpen(true);
+        }}
+      />
     </div>
   );
 }

@@ -198,7 +198,7 @@ export function PostDeclarationView({
                           alt={storedDeclaration.layoutRhetoric}
                           className="absolute left-0 w-[clamp(40px,5vw,48px)] h-[clamp(40px,5vw,48px)] object-contain opacity-40 -z-10"
                         />
-                        <p className="text-[clamp(12px,1.5vw,16px)] text-sammi-glow font-light relative z-10">
+                        <p className="text-[clamp(8px,1rem,12px)] text-sammi-glow font-light relative z-10">
                           {storedDeclaration.layoutRhetoric}：{getFlairEffect(storedDeclaration.layoutRhetoric)}
                         </p>
                       </div>
@@ -208,7 +208,7 @@ export function PostDeclarationView({
                           alt={storedDeclaration.sourceRhetoric}
                           className="absolute right-0 w-[clamp(40px,5vw,48px)] h-[clamp(40px,5vw,48px)] object-contain opacity-40 -z-10"
                         />
-                        <p className="text-[clamp(12px,1.5vw,16px)] text-sammi-glow font-light relative z-10">
+                        <p className="text-[clamp(8px,1rem,12px)] text-sammi-glow font-light relative z-10">
                           {storedDeclaration.sourceRhetoric}：{getFlairEffect(storedDeclaration.sourceRhetoric)}
                         </p>
                       </div>

@@ -116,8 +116,8 @@ export function CardFront({ foldartal, position, animate = false }: CardFrontPro
   return (
     <div className={`flex flex-col items-center space-y-2 h-full mb-6 justify-center ${animate ? 'animate-reveal' : ''}`}>
       {cardContent}
-      <div className="absolute md:bottom-2 -bottom-4 left-1/2 -translate-x-1/2 text-center">
-        <p className="text-[clamp(10px,1.5vw,16px)] text-sammi-snow/60">
+      <div className="absolute md:-bottom-6 -bottom-4 left-1/2 -translate-x-1/2 text-center">
+        <p className="text-[clamp(8px,1.5vw,14px)] text-sammi-snow/60">
           {foldartal.category}·{foldartal.type}
         </p>
       </div>

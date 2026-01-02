@@ -215,7 +215,8 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
 
   return (
     <div className="flex flex-col h-screen overflow-hidden relative justify-center">
-      <div className="h-[45vh] px-6 pt-6 relative z-10">
+      {/* h-[45vh]  */}
+      <div className="px-6 pt-6 relative z-10">
         {!declared ? (
           <PreDeclarationView
             selectedLayout={selectedLayout}
@@ -241,7 +242,8 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
         />
       </div>
 
-      <div className="h-[60vh] min-h-0 relative z-10">
+      {/* h-[60vh]  */}
+      <div className="min-h-0 relative z-10">
         <Dialog
           messages={messages.filter(m => m.role !== 'system')}
           onSendMessage={onSendMessage}
