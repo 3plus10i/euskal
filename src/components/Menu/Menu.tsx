@@ -4,7 +4,7 @@ export function MenuButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="fixed bottom-6 left-4 z-50 p-3 ice-glass hover:bg-sammi-snow/30 transition-colors cursor-pointer"
+      className="fixed md:bottom-6 bottom-20 left-4 z-50 md:p-3 p-2 ice-glass-b1 hover:bg-sammi-snow/30 transition-colors cursor-pointer"
     >
       <svg
         className="w-4 h-4 text-sammi-glow"

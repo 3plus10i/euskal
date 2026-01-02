@@ -42,7 +42,7 @@ function App() {
   const [backgroundImage, setBackgroundImage] = useState(() => {
     return backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
   });
-  const [debugMode, setDebugMode] = useState(true); // 调试模式开关，默认开启
+  const [debugMode, setDebugMode] = useState(false); // 调试模式开关，开启后静态呈现所有元素
 
   useEffect(() => {
     localStorage.setItem('userName', userName);
@@ -171,24 +171,22 @@ function App() {
       }}
     >
       <div className="min-h-screen bg-gradient-to-b from-sammi-deep/80 to-sammi-bg/90">
-        <MenuButton onClick={() => setMenuOpen(true)} />
-
-      <MenuModal
-        isOpen={menuOpen}
-        onClose={() => setMenuOpen(false)}
-        activeTab={menuTab}
-        onTabChange={setMenuTab}
-        userName={userName}
-        onUserNameChange={handleUserNameChange}
-        onReset={handleReset}
-      />
+        <MenuModal
+          isOpen={menuOpen}
+          onClose={() => setMenuOpen(false)}
+          activeTab={menuTab}
+          onTabChange={setMenuTab}
+          userName={userName}
+          onUserNameChange={handleUserNameChange}
+          onReset={handleReset}
+        />
 
       {stage === AppStage.GREETING && (
         <div className="flex flex-col items-center justify-center min-h-screen space-y-8 md:space-y-12 px-4">
           <div className="text-center space-y-4 md:space-y-6">
             <h1 className="text-3xl md:text-6xl font-bold text-sammi-glow tracking-wide">远山的密文板占卜小屋</h1>
             <p className="text-sammi-ice/70 text-base md:text-xl max-w-2xl leading-relaxed">
-              与远山一起探索萨米冰原的密文低语，宣告神谕，洞察未来。
+              探索萨米的低语，宣告密文，洞察未来。
             </p>
           </div>
 
@@ -208,6 +206,7 @@ function App() {
 
       {stage === AppStage.WORKSPACE && (
         <>
+          <MenuButton onClick={() => setMenuOpen(true)} />
           {/* 布局密文板的背景图形 */}
           <img
             src="/asset/布局密文板的背景图形.png"

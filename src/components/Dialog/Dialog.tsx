@@ -24,7 +24,7 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
     '/asset/立绘_远山_skin1.png'
   ];
 
-  const handlePortraitClick = () => {
+  const switchToNextPortrait = () => {
     if (isTransitioning) return;
     
     setIsTransitioning(true);
@@ -40,6 +40,10 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
     }, 1000);
   };
 
+  const handlePortraitClick = () => {
+    switchToNextPortrait();
+  };
+
   useEffect(() => {
     if (isLoading) {
       const interval = setInterval(() => {
@@ -50,6 +54,14 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
       setDotCount(1);
     }
   }, [isLoading]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      switchToNextPortrait();
+    }, 60000); // 每分钟自动切换一次立绘
+
+    return () => clearInterval(interval);
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -88,21 +100,23 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
     : messages;
 
   return (
-    <div className="flex h-full w-full">
-      <div className="w-[40vw] flex items-center justify-end">
+    <div className="relative flex flex-col md:flex-row h-full w-full">
+      {/* 立绘区域：移动端绝对定位作为背景衬底，桌面端左侧固定宽度 */}
+      <div className="absolute inset-0 flex items-center justify-center md:relative md:inset-auto md:w-[40vw] md:flex md:items-center md:justify-end">
         <img
           src={portraits[portraitIndex]}
           alt="角色立绘"
           onClick={handlePortraitClick}
-          className={`object-contain cursor-pointer transition-opacity duration-1000 h-[90%]`}
+          className="object-contain cursor-pointer transition-opacity duration-1000 h-[40vh] md:h-[90%]"
           style={{ opacity }}
         />
       </div>
 
-      <div className="w-[50vw] flex flex-col p-6 max-w-[900px]">
+      {/* 消息区域：移动端相对定位半透明背景，桌面端右侧固定宽度 */}
+      <div className="relative z-10 flex-1 flex flex-col p-4 md:p-6 md:w-[50vw] bg-black/30 md:bg-transparent">
         <div className="flex-1 overflow-y-auto space-y-4 pr-2 no-scrollbar">
           {messagesToRender.map((message, index) => (
-            <div key={index} className="ice-glass p-4">
+            <div key={index} className="ice-glass-b1 p-4">
               <div className="text-sammi-glow font-bold text-sm mb-2">
                 {getSpeakerName(message.role)}
               </div>
@@ -115,7 +129,7 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
           ))}
           
           {shouldShowPlaceholder && (
-            <div className="ice-glass p-4">
+            <div className="ice-glass-b1 p-4">
               <div className="text-sammi-glow font-bold text-sm mb-2">
                 远山
               </div>
@@ -130,12 +144,12 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
           <div ref={messagesEndRef} />
         </div>
 
-        <form onSubmit={handleSubmit} className="flex gap-2 h-16 mt-4">
+        <form onSubmit={handleSubmit} className="flex gap-2 md:h-16 h-12 mt-4">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="输入你的问题..."
+            placeholder="输入消息..."
             disabled={isLoading}
             className="flex-1 ice-glass px-4 py-3 text-sammi-snow placeholder-sammi-glow/50 focus:outline-none disabled:opacity-50"
           />

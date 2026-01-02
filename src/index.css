@@ -35,13 +35,29 @@
     overflow: hidden;
   }
 
-  .ice-glass-variant {
+  .ice-glass-b1 {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(205, 207, 213, 0.2) 100%
+    );
+    backdrop-filter: blur(1px);
+    border-radius: 0.5rem;
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.1),
+      0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* .ice-glass-variant {
     background: rgba(35, 51, 64, 0.4);
     backdrop-filter: blur(8px);
     border-radius: 0.5rem;
     box-shadow: 0 0 12px rgba(35, 51, 64, 0.2), inset 0 0 20px rgba(35, 51, 64, 0.1);
     border: 1px solid rgba(35, 51, 64, 0.3);
-  }
+  } */
 
   @keyframes fadeInUp {
     from {
