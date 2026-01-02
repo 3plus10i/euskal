@@ -247,8 +247,8 @@ export function MenuModal({ isOpen, onClose, activeTab, onTabChange, userName, o
               onClick={() => {
                 handleSaveName();
                 handleSaveTone();
+                onClose();
               }}
-              disabled={!editingName.trim()}
               className="ice-glass px-4 py-2 hover:bg-sammi-glow-bg/80 text-sammi-glow transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               保存
