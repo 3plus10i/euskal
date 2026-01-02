@@ -71,46 +71,55 @@ interface CardFrontProps {
 export function CardFront({ foldartal, position, animate = false }: CardFrontProps) {
   const imagePath = `/asset/foldartals/${foldartal.id}_${foldartal.name}.png`;
 
-  return (
-    <div className={`flex flex-col items-center space-y-2 h-full justify-center ${animate ? 'animate-reveal' : ''}`}>
-      <div className="relative w-full h-full max-h-[320px] aspect-[208/320] rounded-xl overflow-hidden">
-        <img
-          src="/asset/卡片背景504x792.jpg"
-          alt="卡片背景"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        
-        <div className="absolute inset-0 z-10">
-          <div className="absolute top-[6%] left-1/2 -translate-x-1/2 text-center">
-            <p className="text-[clamp(10px,3vw,24px)] font-medium text-sammi-snow">
-              {foldartal.nameRune.replace(/[\[\]]/g, '')}
-            </p>
-          </div>
-          <div className="absolute top-[16.5%] left-1/2 -translate-x-1/2 text-center">
-            <p className="text-[clamp(4px,1vw,10px)] font-thin tracking-widest text-sammi-snow/50 font-mono">
-              {foldartal.god}
-            </p>
-          </div>
-          
-          <div className="absolute top-[42%] left-[49.7%] -translate-x-1/2 -translate-y-1/2">
-            <img
-              src={imagePath}
-              alt={foldartal.name}
-              className="w-[clamp(60px,12vw,96px)] h-[clamp(60px,12vw,96px)] object-contain"
-            />
-          </div>
-          
-          <div className="absolute bottom-[26%] left-1/2 -translate-x-1/2 text-center font-extrabold space-y-0.5">
-            <p className="text-[clamp(8px,2vw,16px)] text-sammi-snow">
-              {foldartal.name}
-            </p>
-          </div>
-          <div className="absolute bottom-[16%] left-1/2 -translate-x-1/2 text-center space-y-0.5">
-            <p className="text-[clamp(4px,1.5vw,14px)] text-sammi-snow/50 font-mono">
-              {foldartal.nameEn}
-            </p>
-          </div>
+  const cardContent = (
+    <div className="relative w-full h-full max-h-[320px] aspect-[208/320] rounded-xl overflow-hidden">
+      <img
+        src="/asset/卡片背景504x792.jpg"
+        alt="卡片背景"
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+      
+      <div className="absolute inset-0 z-10">
+        <div className="absolute top-[6%] left-1/2 -translate-x-1/2 text-center">
+          <p className="text-[clamp(10px,3vw,24px)] font-medium text-sammi-snow">
+            {foldartal.nameRune.replace(/[\[\]]/g, '')}
+          </p>
         </div>
+        <div className="absolute top-[16.5%] left-1/2 -translate-x-1/2 text-center">
+          <p className="text-[clamp(4px,1vw,10px)] font-thin tracking-widest text-sammi-snow/50 font-mono">
+            {foldartal.god}
+          </p>
+        </div>
+        
+        <div className="absolute top-[42%] left-[49.7%] -translate-x-1/2 -translate-y-1/2">
+          <img
+            src={imagePath}
+            alt={foldartal.name}
+            className="w-[clamp(60px,12vw,96px)] h-[clamp(60px,12vw,96px)] object-contain"
+          />
+        </div>
+        
+        <div className="absolute bottom-[25%] left-1/2 -translate-x-1/2 text-center font-light space-y-0.5">
+          <p className="text-[clamp(13px,2vw,18px)] text-sammi-snow bg-gray-900/60 px-1 rounded-md shadow-lg">
+            {foldartal.name}
+          </p>
+        </div>
+        <div className="absolute bottom-[16%] left-1/2 -translate-x-1/2 text-center space-y-0.5">
+          <p className="text-[clamp(4px,1.5vw,14px)] text-sammi-snow/50 font-mono">
+            {foldartal.nameEn}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className={`flex flex-col items-center space-y-2 h-full mb-6 justify-center ${animate ? 'animate-reveal' : ''}`}>
+      {cardContent}
+      <div className="absolute md:bottom-2 -bottom-4 left-1/2 -translate-x-1/2 text-center">
+        <p className="text-[clamp(10px,1.5vw,16px)] text-sammi-snow/60">
+          {foldartal.category}·{foldartal.type}
+        </p>
       </div>
     </div>
   );

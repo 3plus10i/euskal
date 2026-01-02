@@ -42,6 +42,7 @@ function App() {
   const [backgroundImage, setBackgroundImage] = useState(() => {
     return backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
   });
+  const [debugMode, setDebugMode] = useState(true); // 调试模式开关，默认开启
 
   useEffect(() => {
     localStorage.setItem('userName', userName);
@@ -227,6 +228,7 @@ function App() {
             isLoading={isLoading}
             isWaitingForResponse={isWaitingForResponse}
             onUserNameChange={setUserName}
+            debugMode={debugMode}
           />
         </>
       )}

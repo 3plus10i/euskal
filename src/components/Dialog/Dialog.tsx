@@ -89,24 +89,24 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
 
   return (
     <div className="flex h-full w-full">
-      <div className="w-[40%] flex items-center justify-end">
+      <div className="w-[40vw] flex items-center justify-end">
         <img
           src={portraits[portraitIndex]}
           alt="角色立绘"
           onClick={handlePortraitClick}
-          className={`h-[90%] object-contain cursor-pointer transition-opacity duration-1000`}
+          className={`object-contain cursor-pointer transition-opacity duration-1000 h-[90%]`}
           style={{ opacity }}
         />
       </div>
 
-      <div className="w-[50%] flex flex-col p-6 max-w-[900px]">
+      <div className="w-[50vw] flex flex-col p-6 max-w-[900px]">
         <div className="flex-1 overflow-y-auto space-y-4 pr-2 no-scrollbar">
           {messagesToRender.map((message, index) => (
             <div key={index} className="ice-glass p-4">
               <div className="text-sammi-glow font-bold text-sm mb-2">
                 {getSpeakerName(message.role)}
               </div>
-              <div className="text-sammi-snow leading-relaxed whitespace-normal font-serif-message prose prose-invert max-w-none" style={{ fontSize: '1.1rem' }}>
+              <div className="text-sammi-snow leading-relaxed whitespace-normal font-serif-message text-sm prose prose-invert max-w-none">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                   {message.content}
                 </ReactMarkdown>

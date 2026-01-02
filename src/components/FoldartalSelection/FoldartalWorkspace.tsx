@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Foldartal } from '../../types/foldartal';
+import { useState, useEffect } from 'react';
+import { Foldartal, FlairType } from '../../types/foldartal';
 import { foldartals } from '../../data/foldartals';
-import { FoldartalPlaceholder } from './FoldartalPlaceholder';
-import { CardFront } from './FoldartalCard';
+import { flairs } from '../../data/flairs';
 import { Dialog } from '../Dialog/Dialog';
 import { UserNameEditDialog } from './UserNameEditDialog';
-import { createDeclaration, getConcordType } from '../../utils/foldartalLogic';
+import { createDeclaration, DeclarationResult } from '../../utils/foldartalLogic';
 import { createSystemPrompt, createInitialInquiryPrompt } from '../../utils/prompts';
+import { PreDeclarationView } from './PreDeclarationView';
+import { PostDeclarationView } from './PostDeclarationView';
 
 interface FoldartalWorkspaceProps {
   userName: string;
@@ -16,9 +17,10 @@ interface FoldartalWorkspaceProps {
   isLoading: boolean;
   isWaitingForResponse: boolean;
   onUserNameChange: (newName: string) => void;
+  debugMode?: boolean;
 }
 
-interface StoredDeclaration {
+export interface StoredDeclaration {
   timestamp: string;
   layoutCipherName: string;
   layoutRhetoric: string | null;
@@ -28,7 +30,7 @@ interface StoredDeclaration {
 
 
 
-export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, onSendMultipleMessages, isLoading, isWaitingForResponse, onUserNameChange }: FoldartalWorkspaceProps) {
+export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, onSendMultipleMessages, isLoading, isWaitingForResponse, onUserNameChange, debugMode = false }: FoldartalWorkspaceProps) {
   const [selectedLayout, setSelectedLayout] = useState<Foldartal | null>(null);
   const [selectedSource, setSelectedSource] = useState<Foldartal | null>(null);
   const [declared, setDeclared] = useState(false);
@@ -39,6 +41,37 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
 
   const layoutFoldartals = foldartals.filter(f => f.category === '布局');
   const sourceFoldartals = foldartals.filter(f => f.category === '本因');
+
+  // 调试模式：固定选择英雄（布局）和歌唱（本因）
+  useEffect(() => {
+    if (debugMode) {
+      const heroLayout = foldartals.find(f => f.id === 6); // 英雄
+      const singSource = foldartals.find(f => f.id === 22); // 歌唱
+      
+      if (heroLayout) setSelectedLayout(heroLayout);
+      if (singSource) setSelectedSource(singSource);
+      
+      // 创建存储的宣告记录
+      const timestamp = new Date().toISOString();
+      const newStoredDeclaration: StoredDeclaration = {
+        timestamp,
+        layoutCipherName: heroLayout?.name || '英雄',
+        layoutRhetoric: '延续', // 调试模式固定修辞
+        sourceCipherName: singSource?.name || '歌唱',
+        sourceRhetoric: '自足'  // 调试模式固定修辞
+      };
+      
+      // 自动宣告
+      setDeclared(true);
+      setStoredDeclaration(newStoredDeclaration);
+      setInterpretationSent(true); // 防止重复发送AI消息
+      
+      // 保存到本地存储
+      const existingDeclarations = JSON.parse(localStorage.getItem('declarations') || '[]');
+      existingDeclarations.push(newStoredDeclaration);
+      localStorage.setItem('declarations', JSON.stringify(existingDeclarations));
+    }
+  }, [debugMode]);
 
   useEffect(() => {
     setMessages(initialMessages);
@@ -130,9 +163,7 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
     }
   };
 
-  const handleEditUserName = () => {
-    setEditingUserName(true);
-  };
+
 
   const handleSaveUserName = (newName: string) => {
     localStorage.setItem('userName', newName);
@@ -144,7 +175,27 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
     setEditingUserName(false);
   };
 
-  const declaration = selectedLayout && selectedSource ? createDeclaration(selectedLayout.id, selectedSource.id) : null;
+  // 计算宣告结果，调试模式下强制包含修辞
+  const declaration = ((): DeclarationResult | null => {
+    if (!selectedLayout || !selectedSource) return null;
+    
+    const result = createDeclaration(selectedLayout.id, selectedSource.id);
+    
+    // 调试模式：确保修辞一定触发
+    if (debugMode && result) {
+      // 获取适合类别的修辞
+      const layoutFlair = flairs.find(f => f.type === '布局');
+      const sourceFlair = flairs.find(f => f.type === '本因');
+      
+      return {
+        ...result,
+        layoutRhetoric: (layoutFlair?.name as FlairType) || '延续',
+        sourceRhetoric: (sourceFlair?.name as FlairType) || '自足'
+      };
+    }
+    
+    return result;
+  })();
 
   const getFlairEffect = (flairName: string | null): string => {
     if (!flairName) return '';
@@ -159,177 +210,22 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
 
   return (
     <div className="flex flex-col h-screen overflow-hidden relative justify-center">
-      <div className="h-[40vh] p-6 relative z-10">
+      <div className="h-[45vh] px-6 pt-6 relative z-10">
         {!declared ? (
-          // 布局密文板和本因密文板的选择区域
-          <div className="flex justify-center items-center gap-8 h-full">
-            {/* 布局密文板选择区域，左卡片 */}
-            <FoldartalPlaceholder
-              type="layout"
-              selected={selectedLayout !== null}
-              onClick={handleLayoutClick}
-            />
-
-            {/* 中间的开始宣告按钮 */}
-            <div
-              onClick={handleDeclare}
-              className={`
-                relative w-full max-w-[256px] aspect-[4/3] cursor-pointer transition-all duration-500
-                ${!selectedLayout || !selectedSource
-                  ? 'opacity-30 cursor-not-allowed'
-                  : 'opacity-100 hover:-translate-y-2 hover:brightness-110'
-                }
-              `}
-            >
-              <img
-                src="/asset/资料背景素材小图腾圆形1x1.png"
-                alt="开始宣告"
-                className="w-full h-full object-contain"
-              />
-              <span className="absolute inset-0 flex items-center justify-center text-sammi-ice font-normal text-[clamp(12px,2vw,32px)]">
-                开始宣告
-              </span>
-            </div>
-
-            {/* 本因密文板选择区域，右卡片 */}
-            <FoldartalPlaceholder
-              type="source"
-              selected={selectedSource !== null}
-              onClick={handleSourceClick}
-            />
-          </div>
-        ) : (
-          // 宣告后的 布局密文板和本因密文板的显示区域
-          <div className="flex flex-col items-center h-full justify-center">
-            <div className="flex justify-center items-center gap-4 w-full h-full max-w-[100rem] px-4">
-              
-              {declaration && (
-                <>
-                  <div className="flex-1 flex justify-end items-center">
-                    <div className="text-right space-y-1 max-w-lg px-2">
-                      <p className="text-[clamp(12px,1.5vw,16px)] text-sammi-snow/80 italic leading-relaxed">
-                        {declaration.layout.motto}
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <CardFront foldartal={declaration.layout} position="layout" animate={true} />
-                  
-                  <div className="flex flex-col items-center justify-center space-y-2 h-full">
-                    <div className="mb-4">
-                      {declaration.layout.chant && (
-                        <div className="text-center max-w-xs">
-                          <p className="text-[clamp(12px,1.5vw,16px)] italic text-emphasis leading-relaxed font-serif-message">
-                            {declaration.layout.chant}
-                          </p>
-                        </div>
-                      )}
-
-                      {declaration.source.chant && (
-                        <div className="text-center max-w-xs">
-                          <p className="text-[clamp(12px,1.5vw,16px)] italic text-emphasis leading-relaxed font-serif-message">
-                            {declaration.source.chant}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                    
-                    {declaration.concord && declaration.concord !== '无' && (
-                      <div className="relative flex flex-col items-center" style={{marginBottom: '1rem'}}>
-                        {declaration.layout.type !== '世相' && declaration.source.type !== '世相' && (
-                          <img
-                            src={`/asset/${getConcordType(declaration.layout, declaration.source)}logo1x1.png`}
-                            alt={getConcordType(declaration.layout, declaration.source)}
-                            className="absolute inset-0 w-full h-full object-contain opacity-50 -z-10"
-                            style={{
-                              scale: '2'
-                            }}
-                          />
-                        )}
-                        <p className="text-[clamp(10px,1.2vw,12px)] text-sammi-snow/70">柯瓦狄协语</p>
-                        <p className="text-[clamp(14px,1.8vw,16px)] text-sammi-glow relative z-10">
-                          {declaration.concord}
-                        </p>
-                      </div>
-                    )}
-
-                    {(storedDeclaration?.layoutRhetoric && storedDeclaration.layoutRhetoric !== '无') || (storedDeclaration?.sourceRhetoric && storedDeclaration.sourceRhetoric !== '无') ? (
-                      <div className="flex flex-col items-center space-y-2">
-                        <p className="text-[clamp(10px,1.2vw,12px)] text-sammi-snow/70">凯宁嘉修辞</p>
-                        <div className="relative flex flex-col items-center space-y-1">
-                          {(storedDeclaration?.layoutRhetoric && storedDeclaration.layoutRhetoric !== '无') && (storedDeclaration?.sourceRhetoric && storedDeclaration.sourceRhetoric !== '无') ? (
-                            <div className="relative flex items-center justify-center gap-4">
-                              <div className="relative flex items-center justify-center">
-                                <img
-                                  src={`/asset/修辞_${storedDeclaration.layoutRhetoric}.png`}
-                                  alt={storedDeclaration.layoutRhetoric}
-                                  className="absolute inset-0 w-[clamp(40px,5vw,48px)] h-[clamp(40px,5vw,48px)] object-contain opacity-20 -z-10"
-                                />
-                                <p className="text-[clamp(12px,1.5vw,16px)] text-sammi-glow relative z-10">
-                                  {storedDeclaration.layoutRhetoric}：{getFlairEffect(storedDeclaration.layoutRhetoric)}
-                                </p>
-                              </div>
-                              <div className="relative flex items-center justify-center">
-                                <img
-                                  src={`/asset/修辞_${storedDeclaration.sourceRhetoric}.png`}
-                                  alt={storedDeclaration.sourceRhetoric}
-                                  className="absolute inset-0 w-[clamp(40px,5vw,48px)] h-[clamp(40px,5vw,48px)] object-contain opacity-50 -z-10"
-                                  style={{
-                                    scale: '1.5'
-                                  }}
-                                />
-                                <p className="text-[clamp(12px,1.5vw,16px)] text-sammi-glow relative z-10">
-                                  {storedDeclaration.sourceRhetoric}：{getFlairEffect(storedDeclaration.sourceRhetoric)}
-                                </p>
-                              </div>
-                            </div>
-                          ) : (
-                            <>
-                              {storedDeclaration?.layoutRhetoric && storedDeclaration.layoutRhetoric !== '无' && (
-                                <div className="relative flex items-center justify-center">
-                                  <img
-                                    src={`/asset/修辞_${storedDeclaration.layoutRhetoric}.png`}
-                                    alt={storedDeclaration.layoutRhetoric}
-                                    className="absolute inset-0 w-[clamp(40px,5vw,48px)] h-[clamp(40px,5vw,48px)] object-contain opacity-20 -z-10"
-                                  />
-                                  <p className="text-[clamp(12px,1.5vw,16px)] text-sammi-glow relative z-10">
-                                    {storedDeclaration.layoutRhetoric}：{getFlairEffect(storedDeclaration.layoutRhetoric)}
-                                  </p>
-                                </div>
-                              )}
-                              {storedDeclaration?.sourceRhetoric && storedDeclaration.sourceRhetoric !== '无' && (
-                                <div className="relative flex items-center justify-center">
-                                  <img
-                                    src={`/asset/修辞_${storedDeclaration.sourceRhetoric}.png`}
-                                    alt={storedDeclaration.sourceRhetoric}
-                                    className="absolute inset-0 w-[clamp(40px,5vw,48px)] h-[clamp(40px,5vw,48px)] object-contain opacity-20 -z-10"
-                                  />
-                                  <p className="text-[clamp(12px,1.5vw,16px)] text-sammi-glow relative z-10">
-                                    {storedDeclaration.sourceRhetoric}：{getFlairEffect(storedDeclaration.sourceRhetoric)}
-                                  </p>
-                                </div>
-                              )}
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    ) : null}
-                  </div>
-
-                  <CardFront foldartal={declaration.source} position="source" animate={true} />
-                  
-                  <div className="flex-1 flex justify-start items-center">
-                    <div className="text-left space-y-1 max-w-[100rem] px-2">
-                      <p className="text-[clamp(12px,1.5vw,16px)] text-sammi-snow/80 italic leading-relaxed">
-                        {declaration.source.motto}
-                      </p>
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-        )}
+          <PreDeclarationView
+            selectedLayout={selectedLayout}
+            selectedSource={selectedSource}
+            handleLayoutClick={handleLayoutClick}
+            handleSourceClick={handleSourceClick}
+            handleDeclare={handleDeclare}
+          />
+        ) : declaration ? (
+          <PostDeclarationView
+            declaration={declaration}
+            storedDeclaration={storedDeclaration}
+            getFlairEffect={getFlairEffect}
+          />
+        ) : null}
       </div>
 
       <div className="flex items-center justify-center py-2 z-10">
