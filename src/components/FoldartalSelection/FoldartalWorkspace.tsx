@@ -103,7 +103,8 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
       setDeclared(true);
       setInterpretationSent(true);
       
-      const systemPrompt = createSystemPrompt(userName);
+      const customTone = localStorage.getItem('customTone');
+      const systemPrompt = createSystemPrompt(userName, customTone);
       const initialInquiryPrompt = createInitialInquiryPrompt(
         userName,
         selectedLayout.name,
