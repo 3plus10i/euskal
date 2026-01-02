@@ -13,7 +13,7 @@ interface FoldartalWorkspaceProps {
   userName: string;
   initialMessages: any[];
   onSendMessage: (content: string, role?: 'user' | 'system') => void;
-  onSendMultipleMessages: (messageList: { role: 'user' | 'system' | 'assistant', content: string, visible?: boolean }[]) => void;
+  onSendMultipleMessages: (messageList: { role: 'user' | 'system' | 'assistant', content: string, visible?: boolean, timestamp?: string }[]) => void;
   isLoading: boolean;
   isWaitingForResponse: boolean;
   onUserNameChange: (newName: string) => void;
@@ -161,9 +161,9 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
       );
       
       onSendMultipleMessages([
-        { role: 'system', content: systemPrompt.content, visible: false },
-        { role: 'assistant', content: initialMessages[0]?.content || '', visible: false },
-        { role: 'user', content: initialInquiryPrompt.content, visible: false }
+        { role: 'system', content: systemPrompt.content, visible: false, timestamp: new Date().toISOString() },
+        { role: 'assistant', content: initialMessages[0]?.content || '', visible: false, timestamp: new Date().toISOString() },
+        { role: 'user', content: initialInquiryPrompt.content, visible: false, timestamp: new Date().toISOString() }
       ]);
     }
   };
@@ -214,8 +214,8 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
   };
 
   return (
-    <div className="flex flex-col h-full overflow-hidden relative justify-evenly">
-      <div className="px-6 pt-6 relative z-10 flex-shrink-0">
+    <div className="flex flex-col h-full overflow-hidden relative">
+      <div className="px-6 pt-10 relative z-10 h-auto min-h-[200px] flex flex-col">
         {!declared ? (
           <PreDeclarationView
             selectedLayout={selectedLayout}
@@ -251,6 +251,7 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
             const hasDoubleSociety = selectedLayout?.type === '世相' && selectedSource?.type === '世相';
             return hasDoubleSociety && declared;
           })() : false}
+          isDeclared={declared}
         />
       </div>
 

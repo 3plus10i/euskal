@@ -35,13 +35,13 @@
     overflow: hidden;
   }
 
-  .ice-glass-b1 {
+  .ice-glass-b3 {
     background: linear-gradient(
       135deg,
       rgba(255, 255, 255, 0.1) 0%,
       rgba(205, 207, 213, 0.2) 100%
     );
-    backdrop-filter: blur(1px);
+    backdrop-filter: blur(3px);
     border-radius: 0.5rem;
     box-shadow:
       0 8px 32px rgba(0, 0, 0, 0.1),

@@ -32,7 +32,8 @@ export class AIServiceManager {
       id,
       role,
       content,
-      display
+      display,
+      timestamp: new Date().toISOString()
     };
     this.messages.push(message);
     return id;

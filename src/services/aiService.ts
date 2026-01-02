@@ -4,6 +4,7 @@ export interface Message {
   role: 'system' | 'user' | 'assistant';
   content: string;
   visible?: boolean;
+  timestamp?: string;
 }
 
 export interface AIResponse {

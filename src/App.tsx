@@ -55,14 +55,15 @@ function App() {
     setStage(AppStage.WORKSPACE);
     const welcomeMessage = {
       role: 'assistant',
-      content: createWelcomeMessage(userName)
+      content: createWelcomeMessage(userName),
+      timestamp: new Date().toISOString()
     };
     setAllMessages([welcomeMessage]);
     setVisibleMessages([welcomeMessage]);
   };
 
   const handleSendMessage = (content, role = 'user') => {
-    const newMessage = { role, content };
+    const newMessage = { role, content, timestamp: new Date().toISOString() };
     const newAllMessages = [...allMessages, newMessage];
     const newVisibleMessages = [...visibleMessages, newMessage];
     setAllMessages(newAllMessages);
@@ -81,7 +82,7 @@ function App() {
           setIsWaitingForResponse(false);
         }
         assistantMessage += chunk;
-        const assistantMsg = { role: 'assistant', content: assistantMessage };
+        const assistantMsg = { role: 'assistant', content: assistantMessage, timestamp: new Date().toISOString() };
         setAllMessages([...newAllMessages, assistantMsg]);
         setVisibleMessages([...newVisibleMessages, assistantMsg]);
       },
@@ -94,14 +95,14 @@ function App() {
         setIsLoading(false);
         setIsWaitingForResponse(false);
         const errorMessage = error.message === '连接超时' ? '连接超时，请稍后再试。' : '抱歉，我无法回应。请稍后再试。';
-        const errorMsg = { role: 'assistant', content: errorMessage };
+        const errorMsg = { role: 'assistant', content: errorMessage, timestamp: new Date().toISOString() };
         setAllMessages([...newAllMessages, errorMsg]);
         setVisibleMessages([...newVisibleMessages, errorMsg]);
       }
     );
   };
 
-  const handleSendMultipleMessages = (messageList: { role: 'user' | 'system', content: string, visible?: boolean }[]) => {
+  const handleSendMultipleMessages = (messageList: { role: 'user' | 'system' | 'assistant', content: string, visible?: boolean, timestamp?: string }[]) => {
     const visibleMsgs = messageList.filter(m => m.visible !== false);
     const newAllMessages = [...allMessages, ...messageList];
     const newVisibleMessages = [...visibleMessages, ...visibleMsgs];
@@ -121,7 +122,7 @@ function App() {
           setIsWaitingForResponse(false);
         }
         assistantMessage += chunk;
-        const assistantMsg = { role: 'assistant', content: assistantMessage };
+        const assistantMsg = { role: 'assistant', content: assistantMessage, timestamp: new Date().toISOString() };
         setAllMessages([...newAllMessages, assistantMsg]);
         setVisibleMessages([...newVisibleMessages, assistantMsg]);
       },
@@ -134,7 +135,7 @@ function App() {
         setIsLoading(false);
         setIsWaitingForResponse(false);
         const errorMessage = error.message === '连接超时' ? '连接超时，请稍后再试。' : '抱歉，我无法回应。请稍后再试。';
-        const errorMsg = { role: 'assistant', content: errorMessage };
+        const errorMsg = { role: 'assistant', content: errorMessage, timestamp: new Date().toISOString() };
         setAllMessages([...newAllMessages, errorMsg]);
         setVisibleMessages([...newVisibleMessages, errorMsg]);
       }
@@ -146,7 +147,8 @@ function App() {
     setStage(AppStage.WORKSPACE);
     const welcomeMessage = {
       role: 'assistant',
-      content: createWelcomeMessage(newName)
+      content: createWelcomeMessage(newName),
+      timestamp: new Date().toISOString()
     };
     setAllMessages([welcomeMessage]);
     setVisibleMessages([welcomeMessage]);
@@ -155,7 +157,8 @@ function App() {
   const handleReset = () => {
     const welcomeMessage = {
       role: 'assistant',
-      content: createWelcomeMessage(userName)
+      content: createWelcomeMessage(userName),
+      timestamp: new Date().toISOString()
     };
     setAllMessages([welcomeMessage]);
     setVisibleMessages([welcomeMessage]);

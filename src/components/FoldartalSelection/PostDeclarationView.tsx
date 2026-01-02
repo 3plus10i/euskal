@@ -19,7 +19,7 @@ export function PostDeclarationView({
       {/* 移动端布局：md 以下显示 */}
       <div className="flex flex-col items-center h-full justify-center md:hidden">
         {/* 卡片行：左右两张卡片 */}
-        <div className="flex flex-row justify-between items-center w-full flex-1 gap-2">
+        <div className="flex flex-row justify-evenly items-center w-full h-[160px] gap-2">
           <CardFront foldartal={declaration.layout} position="layout" animate={true} />
           
           <div className="flex flex-col items-center justify-center space-y-6 h-full">

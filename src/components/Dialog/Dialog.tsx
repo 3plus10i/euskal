@@ -4,12 +4,13 @@ import remarkGfm from 'remark-gfm';
 import { aiService } from '../../services/aiService';
 import { Message } from '../../services/aiService';
 
-export function Dialog({ messages, onSendMessage, isLoading, isWaitingForResponse, isDoubleSociety = false }: {
+export function Dialog({ messages, onSendMessage, isLoading, isWaitingForResponse, isDoubleSociety = false, isDeclared = true }: {
   messages: Message[];
   onSendMessage: (content: string) => void;
   isLoading: boolean;
   isWaitingForResponse: boolean;
   isDoubleSociety?: boolean;
+  isDeclared?: boolean;
 }) {
   const [input, setInput] = useState('');
   const [dotCount, setDotCount] = useState(1);
@@ -19,6 +20,7 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
   const [isPriestessMode, setIsPriestessMode] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const portraits = [
     '/asset/立绘_远山_1.png',
@@ -26,6 +28,17 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
     '/asset/立绘_远山_skin1.png',
     '/asset/Priestess.png'
   ];
+
+  const formatTime = (timestamp?: string) => {
+    if (!timestamp) return '';
+    try {
+      const date = new Date(timestamp);
+      if (isNaN(date.getTime())) return '';
+      return date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false });
+    } catch {
+      return '';
+    }
+  };
 
   const switchToNextPortrait = () => {
     if (isTransitioning) return;
@@ -107,9 +120,27 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
     };
   }, [messages]);
 
+  // 自动调整 textarea 高度
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    // 重置高度为 auto 以获取正确的 scrollHeight
+    textarea.style.height = 'auto';
+    const scrollHeight = textarea.scrollHeight;
+    // 计算 最大rem 的像素值
+    const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
+    const maxHeight = rootFontSize * 6;
+    // 设置高度为 scrollHeight，但不超过 maxHeight
+    const newHeight = Math.min(scrollHeight, maxHeight);
+    textarea.style.height = `${newHeight}px`;
+    // 如果内容超出最大高度，显示滚动条
+    textarea.style.overflowY = scrollHeight > maxHeight ? 'auto' : 'hidden';
+  }, [input]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (input.trim() && !isLoading) {
+    if (input.trim() && !isLoading && isDeclared) {
       onSendMessage(input.trim());
       setInput('');
     }
@@ -140,9 +171,14 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
       <div className="relative z-10 flex-1 flex flex-col p-4 md:p-6 md:w-[50vw] md:bg-transparent h-full" style={{ background: 'linear-gradient(to bottom,transparent 0%,rgba(0, 0, 0, 0.25) 15%,rgba(0, 0, 0, 0.25) 85%,transparent 100%)' }}>
         <div className="flex-1 min-h-0 overflow-y-auto space-y-4 pr-2" style={{ scrollbarWidth: 'none' }}>
           {messagesToRender.map((message, index) => (
-            <div key={index} className="ice-glass-b1 p-4">
+            <div key={index} className="ice-glass-b3 p-4">
               <div className="text-sammi-snow font-bold text-sm mb-2">
                 {getSpeakerName(message.role)}
+                {message.timestamp && (
+                  <span className="text-sammi-glow/70 font-light text-xs ml-2">
+                    {formatTime(message.timestamp)}
+                  </span>
+                )}
               </div>
               <div className="text-sammi-glow leading-relaxed whitespace-normal font-serif-message text-sm prose prose-invert max-w-none">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
@@ -153,7 +189,7 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
           ))}
           
           {shouldShowPlaceholder && (
-            <div className="ice-glass-b1 p-4">
+            <div className="ice-glass-b3 p-4">
               <div className="text-sammi-snow font-bold text-sm mb-2">
                 远山
               </div>
@@ -168,19 +204,26 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
           <div ref={messagesEndRef} />
         </div>
 
-        <form onSubmit={handleSubmit} className="flex-shrink-0 flex gap-2 md:h-16 h-12 mt-4">
-          <input
-            type="text"
+        <form onSubmit={handleSubmit} className="flex-shrink-0 flex gap-2 mt-4 items-end">
+          <textarea
+            ref={textareaRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="输入消息..."
-            disabled={isLoading}
-            className="flex-1 ice-glass px-4 py-3 text-sammi-snow placeholder-sammi-glow/50 focus:outline-none disabled:opacity-50"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey && isDeclared) {
+                e.preventDefault();
+                handleSubmit(e as React.FormEvent);
+              }
+            }}
+            placeholder={isDeclared ? "输入消息..." : "等待宣告密文板..."}
+            disabled={isLoading || !isDeclared}
+            rows={1}
+            className="flex-1 ice-glass px-4 py-3 text-sammi-snow placeholder-sammi-glow/50 font-serif-message focus:outline-none disabled:opacity-50 resize-none"
           />
           <button
             type="submit"
-            disabled={!input.trim() || isLoading}
-            className="px-6 py-3 bg-sammi-deep hover:bg-sammi-deep/80 text-sammi-snow font-bold rounded-[20%] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={!input.trim() || isLoading || !isDeclared}
+            className="p-3 bg-sammi-deep hover:bg-sammi-deep/80 text-sammi-snow font-bold rounded-[0.5rem] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             发送
           </button>

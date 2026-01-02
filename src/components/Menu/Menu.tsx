@@ -101,7 +101,7 @@ export function MenuModal({ isOpen, onClose, activeTab, onTabChange, userName, o
                 族群、灵魂、自然各有6个布局，7个本因。视相有2个布局（到来和离去）。世相有1个布局1个本因（伤痕和空无）。
               </p>
               <p className="text-sammi-ice leading-relaxed">
-                单块密文板无法产生任何效果。必须选择一块布局和一块本因组合成完整密文进行宣告，才能获得神谕。
+                宣告时必须选取布局和本因各一块结合，才能获得神谕。
               </p>
               <p className="text-sammi-ice leading-relaxed">
                 密文板还具有如下额外效果：
@@ -167,7 +167,7 @@ export function MenuModal({ isOpen, onClose, activeTab, onTabChange, userName, o
                     <span className="text-lg font-bold text-sammi-glow">v1.1</span>
                   </div>
                   <ul className="space-y-2 text-sammi-ice/80 text-sm">
-                    <li>• 移动端适配完成</li>
+                    <li>• 移动端适配初步完成</li>
                     <li>• 优化用户界面和交互体验</li>
                   </ul>
                 </div>
@@ -179,7 +179,22 @@ export function MenuModal({ isOpen, onClose, activeTab, onTabChange, userName, o
                     <span className="text-lg font-bold text-sammi-glow">v1.2</span>
                   </div>
                   <ul className="space-y-2 text-sammi-ice/80 text-sm">
-                    <li>• 优化用户界面和交互体验</li>
+                    <li>• 吐血优化移动端</li>
+                    <li>• 优化界面设计和交互</li>
+                    <li>• 修复已知问题和bug</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="border-l-2 border-sammi-glow pl-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="text-lg font-bold text-sammi-glow">未来版本计划</span>
+                  </div>
+                  <ul className="space-y-2 text-sammi-ice/80 text-sm">
+                    <li>• TODO：密文板价值和源石锭系统</li>
+                    <li>• TODO：结果生成与图片分享系统</li>
+                    <li>• TODO：最近宣告密文板记录</li>
                   </ul>
                 </div>
               </div>
@@ -225,18 +240,6 @@ export function MenuModal({ isOpen, onClose, activeTab, onTabChange, userName, o
                   <p className="text-xs text-sammi-ice/50 mt-2">语气修改将在刷新页面后生效</p>
                 )}
               </div>
-
-              {/* {onReset && (
-                <div className="ice-glass pt-4 mt-4">
-                  <h3 className="text-lg font-bold text-sammi-glow mb-2">密文板操作</h3>
-                  <button
-                    onClick={handleReset}
-                    className="ice-glass px-4 py-2 hover:bg-sammi-glow-bg/80 text-sammi-glow transition-colors cursor-pointer"
-                  >
-                    重新选择密文板
-                  </button>
-                </div>
-              )} */}
             </div>
           )}
         </div>

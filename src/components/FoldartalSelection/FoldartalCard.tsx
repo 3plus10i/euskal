@@ -14,16 +14,16 @@ export function CardBack({ type, selected, onClick }: CardBackProps) {
     <div
       onClick={onClick}
       className={`
-        relative cursor-pointer transition-all duration-500 h-full flex items-center justify-center
+        relative cursor-pointer transition-all duration-500 h-full w-auto flex-none flex items-center justify-center min-h-[120px]
         ${selected ? '-translate-y-2' : 'hover:-translate-y-1'}
       `}
     >
       <div
-        className={`
-          w-full h-full max-h-[256px] aspect-[5/8] rounded-xl overflow-hidden relative
-          transition-all duration-500
-          ${selected ? 'shadow-[0_0_20px_rgba(176,206,245,0.3)]' : ''}
-        `}
+      className={`
+        h-full w-auto aspect-[5/8] rounded-xl overflow-hidden relative
+        transition-all duration-500
+        ${selected ? 'shadow-[0_0_20px_rgba(176,206,245,0.3)]' : ''}
+      `}
       >
         <img
           src="/asset/卡片背景504x792.jpg"
@@ -115,7 +115,7 @@ export function CardFront({ foldartal, position, animate = false }: CardFrontPro
 
   return (
     // 高度用clamp
-    <div className={`flex flex-col items-center space-y-2 h-[clamp(60px,30vh,300px)] mb-6 min-w-[85px] justify-center ${animate ? 'animate-reveal' : ''}`}>
+    <div className={`flex flex-col items-center space-y-2 h-[clamp(160px,20vh,200px)] mb-6 min-w-[85px] justify-center ${animate ? 'animate-reveal' : ''}`}>
       {cardContent}
       <div className="absolute md:-bottom-6 -bottom-4 left-1/2 -translate-x-1/2 text-center">
         <p className="text-[clamp(8px,1.5vw,14px)] text-sammi-snow/60">

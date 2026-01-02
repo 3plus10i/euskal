@@ -1,6 +1,6 @@
 import React from 'react';
 import { Foldartal } from '../../types/foldartal';
-import { FoldartalPlaceholder } from './FoldartalPlaceholder';
+import { CardBack } from './FoldartalCard';
 
 interface PreDeclarationViewProps {
   selectedLayout: Foldartal | null;
@@ -20,14 +20,14 @@ export function PreDeclarationView({
   return (
     <>
       {/* 移动端布局：md 以下显示 */}
-      <div className="flex flex-col items-center h-full md:hidden">
-        <div className="flex flex-row justify-between w-full flex-1 items-center gap-4">
-          <FoldartalPlaceholder
+      <div className="flex flex-col items-center justify-between h-full min-h-[180px] md:hidden">
+        <div className="flex flex-row justify-center w-full items-center gap-4" style={{ height: '210px' }}>
+          <CardBack
             type="layout"
             selected={selectedLayout !== null}
             onClick={handleLayoutClick}
           />
-          <FoldartalPlaceholder
+          <CardBack
             type="source"
             selected={selectedSource !== null}
             onClick={handleSourceClick}
@@ -36,7 +36,7 @@ export function PreDeclarationView({
         <div
           onClick={handleDeclare}
           className={`
-            relative w-[20vw] aspect-[4/3] cursor-pointer transition-all duration-500 mt-4
+            relative w-[20vw] aspect-[4/3] cursor-pointer transition-all duration-500 mb-4
             ${!selectedLayout || !selectedSource
               ? 'opacity-30 cursor-not-allowed'
               : 'opacity-100 hover:-translate-y-2 hover:brightness-110'
@@ -55,8 +55,8 @@ export function PreDeclarationView({
       </div>
 
       {/* 桌面端布局：md 以上显示 */}
-      <div className="hidden md:flex justify-center items-center gap-8 h-full">
-        <FoldartalPlaceholder
+      <div className="hidden md:flex justify-center items-center gap-8 h-full min-h-[230px] w-full">
+        <CardBack
           type="layout"
           selected={selectedLayout !== null}
           onClick={handleLayoutClick}
@@ -82,7 +82,7 @@ export function PreDeclarationView({
           </span>
         </div>
 
-        <FoldartalPlaceholder
+        <CardBack
           type="source"
           selected={selectedSource !== null}
           onClick={handleSourceClick}
