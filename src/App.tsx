@@ -183,10 +183,10 @@ function App() {
       />
 
       {stage === AppStage.GREETING && (
-        <div className="flex flex-col items-center justify-center min-h-screen space-y-12">
-          <div className="text-center space-y-6">
-            <h1 className="text-6xl font-bold text-sammi-glow tracking-wide">远山的密文板占卜小屋</h1>
-            <p className="text-sammi-ice/70 text-xl max-w-2xl leading-relaxed">
+        <div className="flex flex-col items-center justify-center min-h-screen space-y-8 md:space-y-12 px-4">
+          <div className="text-center space-y-4 md:space-y-6">
+            <h1 className="text-3xl md:text-6xl font-bold text-sammi-glow tracking-wide">远山的密文板占卜小屋</h1>
+            <p className="text-sammi-ice/70 text-base md:text-xl max-w-2xl leading-relaxed">
               与远山一起探索萨米冰原的密文低语，宣告神谕，洞察未来。
             </p>
           </div>
@@ -198,24 +198,37 @@ function App() {
             <img
               src="/asset/模组_占卜师旅行套装1x1.png"
               alt="进入"
-              className="w-64 h-64 object-contain"
+              className="w-48 h-48 md:w-64 md:h-64 object-contain"
             />
-            <span className="text-sammi-ice font-bold text-2xl">进入</span>
+            <span className="text-sammi-ice font-bold text-xl md:text-2xl">进入</span>
           </div>
         </div>
       )}
 
       {stage === AppStage.WORKSPACE && (
-        <FoldartalWorkspace
-          key={workspaceKey}
-          userName={userName}
-          initialMessages={visibleMessages}
-          onSendMessage={handleSendMessage}
-          onSendMultipleMessages={handleSendMultipleMessages}
-          isLoading={isLoading}
-          isWaitingForResponse={isWaitingForResponse}
-          onUserNameChange={setUserName}
-        />
+        <>
+          {/* 布局密文板的背景图形 */}
+          <img
+            src="/asset/布局密文板的背景图形.png"
+            alt="布局背景图形"
+            className="absolute left-[5vw] top-0 w-[25%] h-auto object-contain opacity-50 pointer-events-none z-0"
+          />
+          <img
+            src="/asset/本因密文板的背景图形.png"
+            alt="本因背景图形"
+            className="absolute left-[70vw] top-0 w-[25%] h-auto object-contain opacity-50 pointer-events-none z-0"
+          />
+          <FoldartalWorkspace
+            key={workspaceKey}
+            userName={userName}
+            initialMessages={visibleMessages}
+            onSendMessage={handleSendMessage}
+            onSendMultipleMessages={handleSendMultipleMessages}
+            isLoading={isLoading}
+            isWaitingForResponse={isWaitingForResponse}
+            onUserNameChange={setUserName}
+          />
+        </>
       )}
       </div>
     </div>

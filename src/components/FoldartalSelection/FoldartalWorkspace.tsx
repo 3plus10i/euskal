@@ -158,38 +158,12 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
   };
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden relative">
-      {/* 布局密文板的背景图形 */}
-      <img
-        src="/asset/布局密文板的背景图形.png"
-        alt="布局背景图形"
-        className="absolute left-[12.5%] top-0 w-[25%] h-auto object-contain opacity-50 pointer-events-none z-0"
-      />
-      <img
-        src="/asset/本因密文板的背景图形.png"
-        alt="本因背景图形"
-        className="absolute left-[62.5%] top-0 w-[25%] h-auto object-contain opacity-50 pointer-events-none z-0"
-      />
-      {/* 用户名显示区域 */}
-      {/* <div className="text-center space-y-3 mb-6 mt-6">
-        <div className="flex items-center justify-center gap-2">
-          <p className="text-2xl font-bold text-sammi-glow tracking-wide">欢迎，探索者 {userName}</p>
-          <button
-            onClick={handleEditUserName}
-            className="text-sammi-snow/60 hover:text-sammi-glow transition-colors"
-            title="你的名字是..."
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-              <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
-            </svg>
-          </button>
-        </div>
-      </div> */}
-      <div className="h-[40%] p-6 relative z-10">
+    <div className="flex flex-col h-screen overflow-hidden relative justify-center">
+      <div className="h-[40vh] p-6 relative z-10">
         {!declared ? (
           // 布局密文板和本因密文板的选择区域
           <div className="flex justify-center items-center gap-8 h-full">
-            {/* 布局密文板选择区域 */}
+            {/* 布局密文板选择区域，左卡片 */}
             <FoldartalPlaceholder
               type="layout"
               selected={selectedLayout !== null}
@@ -212,12 +186,12 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
                 alt="开始宣告"
                 className="w-full h-full object-contain"
               />
-              <span className="absolute inset-0 flex items-center justify-center text-sammi-ice font-bold text-[clamp(16px,2vw,32px)]">
-                {selectedLayout && selectedSource ? '开始宣告' : '请选择密文板'}
+              <span className="absolute inset-0 flex items-center justify-center text-sammi-ice font-normal text-[clamp(12px,2vw,32px)]">
+                开始宣告
               </span>
             </div>
 
-            {/* 本因密文板选择区域 */}
+            {/* 本因密文板选择区域，右卡片 */}
             <FoldartalPlaceholder
               type="source"
               selected={selectedSource !== null}
@@ -366,7 +340,7 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
         />
       </div>
 
-      <div className="h-[60%] min-h-0 relative z-10">
+      <div className="h-[60vh] min-h-0 relative z-10">
         <Dialog
           messages={messages.filter(m => m.role !== 'system')}
           onSendMessage={onSendMessage}
