@@ -26,7 +26,7 @@ export function Footer({ onAboutClick, onSettingsClick, onVersionClick }: {
           onClick={onVersionClick}
           className="text-sm md:text-base text-sammi-ice/60 hover:text-sammi-glow transition-colors cursor-pointer"
         >
-          v1.1
+          v1.2
         </button>
       </div>
     </footer>
