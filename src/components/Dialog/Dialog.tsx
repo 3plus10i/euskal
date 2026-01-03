@@ -188,19 +188,19 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
 
   return (
     <div className="relative flex flex-col md:flex-row h-full w-full">
-      <div className="absolute inset-0 flex items-center justify-center md:relative md:inset-auto md:w-[40vw] md:flex md:items-center md:justify-end">
+      <div className="absolute inset-0 flex items-end justify-center md:relative md:inset-auto md:w-[40vw] md:flex md:items-center md:justify-end">
         <img
           src={isPriestessMode ? specialPortraits[specialPortraitIndex] : normalPortraits[normalPortraitIndex]}
           alt="角色立绘"
           onClick={handlePortraitClick}
-          className="object-contain cursor-pointer transition-opacity duration-1000 h-[40vh] md:h-[90%] brightness-[0.7] md:brightness-100"
+          className="object-contain cursor-pointer transition-opacity duration-1000 h-[95%] md:h-[90%] brightness-[0.7] md:brightness-100"
           style={{ opacity }}
         />
       </div>
 
       {/* 一条消息框 */}
       <div className="relative z-10 flex-1 flex flex-col p-4 md:p-6 md:w-[50vw] md:bg-transparent h-full" style={{ background: 'linear-gradient(to bottom,transparent 0%,rgba(0, 0, 0, 0.25) 15%,rgba(0, 0, 0, 0.25) 85%,transparent 100%)' }}>
-        <div className="flex-1 min-h-0 overflow-y-auto space-y-4 pr-2" style={{ scrollbarWidth: 'none' }}>
+        <div className="flex-1 min-h-0 overflow-y-auto space-y-4" style={{ scrollbarWidth: 'none' }}>
           {messagesToRender.map((message, index) => (
             <div key={index} className="ice-glass-b3 py-2 px-3">
               <div className={`text-sammi-snow font-bold text-sm mb-2 ${message.role === 'user' ? 'text-right' : ''}`}>

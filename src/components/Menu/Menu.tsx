@@ -181,6 +181,18 @@ export function MenuModal({ isOpen, onClose, activeTab, onTabChange, userName, o
                     <li>• 吐血优化移动端样式</li>
                     <li>• 优化界面设计和交互</li>
                     <li>• 修复已知问题和bug</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="border-l-2 border-sammi-glow pl-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="text-lg font-bold text-sammi-glow">v1.2</span>
+                  </div>
+                  <ul className="space-y-2 text-sammi-ice/80 text-sm">
+                    <li>• 进一步优化页面样式和交互</li>
+                    <li>• 修复一些已知问题</li>
                     <li>• 为【数据删除】赋予访问权限</li>
                   </ul>
                 </div>
