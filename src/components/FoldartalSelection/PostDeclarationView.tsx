@@ -123,7 +123,7 @@ export function PostDeclarationView({
         </div>
         
         {/* 箴言行 */}
-        <div className="flex flex-row justify-between w-full mt-3 gap-4">
+        <div className="flex flex-row justify-between w-full mt-3 gap-4 max-h-[120px] overflow-auto">
           <div className="text-left flex-1">
             <p className="text-[clamp(10px,1.2vw,14px)] text-sammi-snow/80 italic leading-relaxed">
               {declaration.layout.motto}

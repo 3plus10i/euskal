@@ -46,10 +46,10 @@ export function MenuModal({ isOpen, onClose, activeTab, onTabChange, userName, o
       onClick={onClose}
     >
       <div
-        className="ice-glass p-6 rounded-xl space-y-4 pointer-events-auto w-full max-w-2xl max-h-[80vh] overflow-hidden"
+        className="ice-glass p-6 rounded-xl pointer-events-auto w-full max-w-2xl max-h-[80vh] overflow-hidden flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex bg-sammi-deep/20 rounded-lg">
+        <div className="flex bg-sammi-deep/20 rounded-lg mb-4">
           <button
             onClick={() => onTabChange('about')}
             className={`flex-1 px-4 py-4 text-sm font-medium transition-colors duration-500 rounded-l-lg ${
@@ -89,7 +89,7 @@ export function MenuModal({ isOpen, onClose, activeTab, onTabChange, userName, o
           </button>
         </div>
 
-        <div className="p-2 overflow-y-auto max-h-[60vh]">
+        <div className="p-2 overflow-y-auto flex-1 min-h-0">
           {activeTab === 'about' && (
             <div className="space-y-2">
               <h2 className="text-xl font-bold text-sammi-glow">快速开始</h2>
@@ -125,6 +125,12 @@ export function MenuModal({ isOpen, onClose, activeTab, onTabChange, userName, o
                 关于远山：
                 <a href="https://prts.wiki/w/%E8%BF%9C%E5%B1%B1" target="_blank" rel="noopener noreferrer" className="text-sammi-glow hover:underline font-light">
                   远山 - PRTS 
+                  {(() => {
+                    const today = new Date();
+                    return today.getMonth() === 0 && today.getDate() === 15;
+                  })() && (
+                    <span className="text-sammi-glow italic">（今天是远山的生日哦！）</span>
+                  )}
                   <svg className="inline-block w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
                   </svg>
@@ -134,6 +140,16 @@ export function MenuModal({ isOpen, onClose, activeTab, onTabChange, userName, o
                 项目地址：
                 <a href="https://github.com/3plus10i/euskal" target="_blank" rel="noopener noreferrer" className="text-sammi-glow hover:underline font-light">
                     远山的密文板占卜小屋
+                    <svg className="inline-block w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                    </svg>
+                  </a>
+                  
+              </p>
+              <p className="text-sammi-ice leading-relaxed">
+                主站：
+                <a href="https://3plus10i.top" target="_blank" rel="noopener noreferrer" className="text-sammi-glow hover:underline font-light">
+                    3plus10i.top
                     <svg className="inline-block w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
                     </svg>
@@ -188,7 +204,7 @@ export function MenuModal({ isOpen, onClose, activeTab, onTabChange, userName, o
               <div className="space-y-4">
                 <div className="border-l-2 border-sammi-glow pl-4">
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="text-lg font-bold text-sammi-glow">v1.2</span>
+                    <span className="text-lg font-bold text-sammi-glow">v1.3</span>
                   </div>
                   <ul className="space-y-2 text-sammi-ice/80 text-sm">
                     <li>• 进一步优化页面样式和交互</li>
@@ -254,7 +270,7 @@ export function MenuModal({ isOpen, onClose, activeTab, onTabChange, userName, o
           )}
         </div>
 
-        <div className="flex gap-3 justify-end">
+        <div className="flex gap-3 justify-end mt-4 pt-4 border-t border-sammi-ice/20">
           {activeTab === 'settings' && (
             <button
               onClick={() => {
