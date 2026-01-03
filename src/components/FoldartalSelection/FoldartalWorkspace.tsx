@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Foldartal, FlairType } from '../../types/foldartal';
 import { foldartals } from '../../data/foldartals';
 import { flairs } from '../../data/flairs';
@@ -39,6 +39,9 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
   const [editingUserName, setEditingUserName] = useState(false);
   const [interpretationSent, setInterpretationSent] = useState(false);
   const [storedDeclaration, setStoredDeclaration] = useState<StoredDeclaration | null>(null);
+  const [showPostDeclaration, setShowPostDeclaration] = useState(true);
+  const [showGlow, setShowGlow] = useState(false);
+  const glowTimeoutRef = useRef<number | null>(null);
 
   const layoutFoldartals = foldartals.filter(f => f.category === '布局');
   const sourceFoldartals = foldartals.filter(f => f.category === '本因');
@@ -64,8 +67,20 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
       
       // 自动宣告
       setDeclared(true);
+      setShowPostDeclaration(true);
       setStoredDeclaration(newStoredDeclaration);
       setInterpretationSent(true); // 防止重复发送AI消息
+      
+      // 触发分割线发光闪烁
+      setShowGlow(true);
+      // 清除可能存在的旧定时器
+      if (glowTimeoutRef.current) {
+        clearTimeout(glowTimeoutRef.current);
+      }
+      // 设置后停止闪烁
+      glowTimeoutRef.current = setTimeout(() => {
+        setShowGlow(false);
+      }, 10500);
       
       // 保存到本地存储
       const existingDeclarations = JSON.parse(localStorage.getItem('declarations') || '[]');
@@ -77,6 +92,15 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
   useEffect(() => {
     setMessages(initialMessages);
   }, [initialMessages]);
+
+  // 清理定时器
+  useEffect(() => {
+    return () => {
+      if (glowTimeoutRef.current) {
+        clearTimeout(glowTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleLayoutClick = () => {
     if (selectedLayout) {
@@ -135,7 +159,19 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
       
       setStoredDeclaration(newStoredDeclaration);
       setDeclared(true);
+      setShowPostDeclaration(true);
       setInterpretationSent(true);
+      
+      // 触发分割线发光闪烁
+      setShowGlow(true);
+      // 清除可能存在的旧定时器
+      if (glowTimeoutRef.current) {
+        clearTimeout(glowTimeoutRef.current);
+      }
+      // 设置秒后停止闪烁
+      glowTimeoutRef.current = setTimeout(() => {
+        setShowGlow(false);
+      }, 10500);
       
       if (onDoubleSocietyTriggered && selectedLayout.type === '世相' && selectedSource.type === '世相') {
         onDoubleSocietyTriggered();
@@ -217,7 +253,7 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
 
   return (
     <div className="flex flex-col h-full overflow-hidden relative">
-      <div className="px-6 pt-10 relative z-10 h-auto min-h-[200px] flex flex-col">
+      <div className="px-6 pt-10 relative z-10 h-auto flex flex-col">
         {!declared ? (
           <PreDeclarationView
             selectedLayout={selectedLayout}
@@ -226,7 +262,7 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
             handleSourceClick={handleSourceClick}
             handleDeclare={handleDeclare}
           />
-        ) : declaration ? (
+        ) : declaration && showPostDeclaration ? (
           <PostDeclarationView
             declaration={declaration}
             storedDeclaration={storedDeclaration}
@@ -235,7 +271,20 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
         ) : null}
       </div>
 
-      <div className="flex items-center justify-center py-2 z-10 flex-shrink-0">
+      <div 
+        className={`flex items-center justify-center py-2 z-10 flex-shrink-0 ${declared ? 'cursor-pointer' : ''} ${showGlow ? 'glowing-divider' : ''}`}
+        onClick={() => {
+          if (declared) {
+            setShowPostDeclaration(prev => !prev);
+          }
+          // 停止闪烁
+          setShowGlow(false);
+          if (glowTimeoutRef.current) {
+            clearTimeout(glowTimeoutRef.current);
+            glowTimeoutRef.current = null;
+          }
+        }}
+      >
         <img
           src="/asset/素材横向分割线B1269x24.png"
           alt="分隔装饰"

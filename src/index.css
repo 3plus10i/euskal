@@ -238,3 +238,16 @@ body {
 .animate-slide-up-out {
   animation: slideUpOut 0.5s ease-in forwards;
 }
+
+@keyframes glowPulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 2px rgba(188, 237, 245, 0.7));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgba(188, 237, 245, 0.9)) drop-shadow(0 0 12px rgba(188, 237, 245, 0.6));
+  }
+}
+
+.glowing-divider img {
+  animation: glowPulse 1.5s ease-in-out infinite;
+}

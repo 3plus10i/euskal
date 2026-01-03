@@ -14,7 +14,8 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
 }) {
   const [input, setInput] = useState('');
   const [dotCount, setDotCount] = useState(1);
-  const [portraitIndex, setPortraitIndex] = useState(1);
+  const [normalPortraitIndex, setNormalPortraitIndex] = useState(1);
+  const [specialPortraitIndex, setSpecialPortraitIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [opacity, setOpacity] = useState(1);
   const [isPriestessMode, setIsPriestessMode] = useState(false);
@@ -22,11 +23,15 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
   const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const portraits = [
+  const normalPortraits = [
     '/asset/立绘_远山_1.png',
     '/asset/立绘_远山_2.png',
-    '/asset/立绘_远山_skin1.png',
-    '/asset/Priestess.png'
+    '/asset/立绘_远山_skin1.png'
+  ];
+
+  const specialPortraits = [
+    '/asset/Priestess.png',
+    '/asset/PriestessSmile.png'
   ];
 
   const formatTime = (timestamp?: string) => {
@@ -47,7 +52,11 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
     setOpacity(0);
     
     setTimeout(() => {
-      setPortraitIndex((prev) => (prev + 1) % (portraits.length-1)); // 正常情况永远跳过最后一个
+      if (isPriestessMode) {
+        setSpecialPortraitIndex((prev) => (prev + 1) % specialPortraits.length);
+      } else {
+        setNormalPortraitIndex((prev) => (prev + 1) % normalPortraits.length);
+      }
       setOpacity(1);
       
       setTimeout(() => {
@@ -79,7 +88,7 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
         setOpacity(0);
         
         setTimeout(() => {
-          setPortraitIndex(3);
+          setSpecialPortraitIndex(0); // 切换到第一个特殊立绘
           setIsPriestessMode(true);
           setOpacity(1);
           
@@ -94,12 +103,11 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
   }, [isDoubleSociety, isPriestessMode]);
 
   useEffect(() => {
-    if (!isPriestessMode) {
-      const interval = setInterval(() => {
-        switchToNextPortrait();
-      }, 60000);
-      return () => clearInterval(interval);
-    }
+    let portraitPeriod = 90*1000; // 默认若干秒循环切换一次立绘
+    const interval = setInterval(() => {
+      switchToNextPortrait();
+    }, portraitPeriod);
+    return () => clearInterval(interval);
   }, [isPriestessMode]);
 
   const scrollToBottom = () => {
@@ -147,7 +155,29 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
   };
 
   const getSpeakerName = (role: string) => {
-    return role === 'user' ? '探索者' : '远山';
+    if (role === 'user') {
+      let userName = localStorage.getItem('userName');
+      if (!userName) {
+        userName = '探索者';
+        localStorage.setItem('userName', userName);
+      }
+      return userName;
+    } else if (role === 'assistant') {
+      if (isPriestessMode) {
+        let name = '';
+        let nameList = ['普瑞赛斯','Priestess','Error: System Mulfunction','这里万籁俱寂……■■，别留下我'];
+        let r = Math.random();
+        if (r < 0.7) {
+          name = '远山';
+        } else {
+          name = nameList[Math.floor(Math.random() * nameList.length)];
+        }
+        return name;
+      } else {
+        return '远山';
+      }
+    }
+    return '??';
   };
 
   const shouldShowPlaceholder = isWaitingForResponse;
@@ -160,10 +190,10 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
     <div className="relative flex flex-col md:flex-row h-full w-full">
       <div className="absolute inset-0 flex items-center justify-center md:relative md:inset-auto md:w-[40vw] md:flex md:items-center md:justify-end">
         <img
-          src={portraits[portraitIndex]}
+          src={isPriestessMode ? specialPortraits[specialPortraitIndex] : normalPortraits[normalPortraitIndex]}
           alt="角色立绘"
           onClick={handlePortraitClick}
-          className="object-contain cursor-pointer transition-opacity duration-1000 h-[40vh] md:h-[90%]"
+          className="object-contain cursor-pointer transition-opacity duration-1000 h-[40vh] md:h-[90%] brightness-[0.7] md:brightness-100"
           style={{ opacity }}
         />
       </div>
@@ -176,12 +206,12 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
               <div className={`text-sammi-snow font-bold text-sm mb-2 ${message.role === 'user' ? 'text-right' : ''}`}>
                 {getSpeakerName(message.role)}
                 {message.timestamp && (
-                  <span className="text-sammi-glow/70 font-light text-xs ml-2">
+                  <span className={`text-sammi-glow/70 font-light text-xs ml-2`}>
                     {formatTime(message.timestamp)}
                   </span>
                 )}
               </div>
-              <div className="text-sammi-glow leading-tight whitespace-normal font-serif-message text-sm prose prose-invert max-w-none">
+              <div className={`text-sammi-glow leading-tight whitespace-normal font-serif-message text-sm prose prose-invert max-w-none ${message.role === 'user' ? 'text-right' : ''}`}>
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                   {message.content}
                 </ReactMarkdown>

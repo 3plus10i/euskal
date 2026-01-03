@@ -144,14 +144,15 @@ function App() {
 
   const handleUserNameChange = (newName) => {
     setUserName(newName);
-    setStage(AppStage.WORKSPACE);
-    const welcomeMessage = {
-      role: 'assistant',
-      content: createWelcomeMessage(newName),
-      timestamp: new Date().toISOString()
-    };
-    setAllMessages([welcomeMessage]);
-    setVisibleMessages([welcomeMessage]);
+    // 修改用户名后，不要重置对话
+    // setStage(AppStage.WORKSPACE);
+    // const welcomeMessage = {
+    //   role: 'assistant',
+    //   content: createWelcomeMessage(newName),
+    //   timestamp: new Date().toISOString()
+    // };
+    // setAllMessages([welcomeMessage]);
+    // setVisibleMessages([welcomeMessage]);
   };
 
   const handleReset = () => {

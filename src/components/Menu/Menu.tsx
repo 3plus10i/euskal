@@ -92,27 +92,26 @@ export function MenuModal({ isOpen, onClose, activeTab, onTabChange, userName, o
         <div className="p-2 overflow-y-auto max-h-[60vh]">
           {activeTab === 'about' && (
             <div className="space-y-2">
-              <h2 className="text-2xl font-bold text-sammi-glow">关于小屋</h2>
+              <h2 className="text-xl font-bold text-sammi-glow">快速开始</h2>
+              <p className="text-sammi-ice leading-relaxed">
+                点击两张密文板卡片，并点击开始宣告，即可获得占卜结果。跟随占卜师的指引，解读密文板的神谕。
+              </p>
+              <p className="text-sammi-ice leading-relaxed">
+                如对话区域不够用，可以点击水平分界线扩展对话区域。
+              </p>
+              <hr className="border-sammi-ice/20 !my-4" />
+
+              <h2 className="text-xl font-bold text-sammi-glow">背景介绍</h2>
               <p className="text-sammi-ice leading-relaxed">
                 『远山的密文板占卜小屋』是基于游戏《明日方舟》集成战略玩法"探索者的银淞止境"中"密文板"的设定创作的神秘学占卜应用。抽取两块密文板，窥探萨米的意志，遵循古老仪式进行密文宣告，然后由占卜师解读密语。
               </p>
               <p className="text-sammi-ice leading-relaxed">
-                密文板共43个，每张密文板有类型属性，类型有三大类：族群（红），灵魂（蓝），自然（绿），以及两个特殊类：世相，视相。
-                族群、灵魂、自然各有6个布局，7个本因。视相有2个布局（到来和离去）。世相有1个布局1个本因（伤痕和空无）。
+                密文板共四十三块，分本因、布局两种和族群、灵魂、自然三类。萨米人将本因和布局两块密文板组合宣告，以聆听萨米意志的指引。宣告时可能触发“协语”和“修辞”的附加效果。
               </p>
               <p className="text-sammi-ice leading-relaxed">
-                宣告时必须选取布局和本因各一块结合，才能获得神谕。
+                有时会抽到视相类布局密文板，它可以与任何布局结合。而更罕见的“世相”密文板，甚至可能具有超越萨米的寓意……
               </p>
-              <p className="text-sammi-ice leading-relaxed">
-                密文板还具有如下额外效果：
-              </p>
-              <p className="text-sammi-ice leading-relaxed">
-                <ul className="space-y-2 text-sammi-ice/80 text-base ml-4">
-                  <li>• 柯瓦狄协语：同类型密文板组合宣告时，可触发本因密文板的协语效果；</li>
-                  <li>• 凯宁嘉修辞：概率附加于任意密文板的额外效果。</li>
-                </ul>
-              </p>
-              <hr className="border-sammi-ice/20" />
+              <hr className="border-sammi-ice/20 !my-4" />
               <p className="text-sammi-ice leading-relaxed">
                 深入研究：
                 <a href="https://prts.wiki/w/探索者的银凇止境/密文板研究" target="_blank" rel="noopener noreferrer" className="text-sammi-glow hover:underline font-light">
@@ -146,7 +145,7 @@ export function MenuModal({ isOpen, onClose, activeTab, onTabChange, userName, o
 
           {activeTab === 'version' && (
             <div className="space-y-6">
-              <h2 className="text-2xl font-bold text-sammi-glow">版本历史</h2>
+              {/* <h2 className="text-xl font-bold text-sammi-glow">版本历史</h2> */}
               
               <div className="space-y-4">
                 <div className="border-l-2 border-sammi-glow pl-4">
@@ -179,9 +178,10 @@ export function MenuModal({ isOpen, onClose, activeTab, onTabChange, userName, o
                     <span className="text-lg font-bold text-sammi-glow">v1.2</span>
                   </div>
                   <ul className="space-y-2 text-sammi-ice/80 text-sm">
-                    <li>• 吐血优化移动端</li>
+                    <li>• 吐血优化移动端样式</li>
                     <li>• 优化界面设计和交互</li>
                     <li>• 修复已知问题和bug</li>
+                    <li>• 为【数据删除】赋予访问权限</li>
                   </ul>
                 </div>
               </div>
@@ -204,10 +204,9 @@ export function MenuModal({ isOpen, onClose, activeTab, onTabChange, userName, o
 
           {activeTab === 'settings' && (
             <div className="space-y-6">
-              <h2 className="text-2xl font-bold text-sammi-glow">设置</h2>
-              
+              {/* <h2 className="text-2xl font-bold text-sammi-glow">设置</h2> */}
               <div>
-                <label className="block text-base text-sammi-glow/70 mb-3">远山称呼您为...</label>
+                <label className="block text-base text-sammi-glow/70 mb-3">您希望远山称呼您为...</label>
                 <input
                   type="text"
                   value={editingName}
@@ -216,7 +215,6 @@ export function MenuModal({ isOpen, onClose, activeTab, onTabChange, userName, o
                   className="w-full ice-glass px-4 py-2 text-sammi-snow focus:outline-none focus:ring-2 focus:ring-sammi-glow"
                 />
               </div>
-
               <div>
                 <label className="block text-base text-sammi-glow/70 mb-3">您希望远山回复您时语气如何？</label>
                 <div className="relative">
