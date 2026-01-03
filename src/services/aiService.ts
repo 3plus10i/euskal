@@ -1,4 +1,4 @@
-const MODEL = 'Pro/deepseek-ai/DeepSeek-V3.2';
+const MODEL = import.meta.env.VITE_AI_MODEL;
 
 export interface Message {
   role: 'system' | 'user' | 'assistant';
