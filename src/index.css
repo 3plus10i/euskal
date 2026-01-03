@@ -38,8 +38,8 @@
   .ice-glass-b3 {
     background: linear-gradient(
       135deg,
-      rgba(255, 255, 255, 0.1) 0%,
-      rgba(205, 207, 213, 0.2) 100%
+      hsla(0, 0%, 50%, 0.3) 0%,
+      hsla(225, 12%, 25%, 0.6) 100%
     );
     backdrop-filter: blur(3px);
     border-radius: 0.5rem;
@@ -145,6 +145,7 @@
     font-family: 'Georgia', 'Times New Roman', 'Songti SC', 'SimSun', serif;
     letter-spacing: 0.02em;
   }
+
 }
 
 @font-face {
@@ -194,7 +195,7 @@ body {
 @keyframes reveal {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(15px);
     filter: brightness(0.5);
   }
   to {
@@ -205,7 +206,7 @@ body {
 }
 
 .animate-reveal {
-  animation: reveal 0.7s ease-out forwards;
+  animation: reveal 1s ease-out forwards;
 }
 
 @keyframes slideUpIn {

@@ -115,7 +115,7 @@ export function CardFront({ foldartal, position, animate = false }: CardFrontPro
 
   return (
     // 高度用clamp
-    <div className={`flex flex-col items-center space-y-2 h-[clamp(160px,20vh,200px)] mb-6 min-w-[85px] justify-center ${animate ? 'animate-reveal' : ''}`}>
+    <div className={`flex flex-col items-center space-y-2 h-[clamp(190px,20vh,250px)] mb-6 min-w-[85px] justify-center ${animate ? 'animate-reveal' : ''}`}>
       {cardContent}
       <div className="absolute md:-bottom-6 -bottom-4 left-1/2 -translate-x-1/2 text-center">
         <p className="text-[clamp(8px,1.5vw,14px)] text-sammi-snow/60">

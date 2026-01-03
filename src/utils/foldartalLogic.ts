@@ -12,8 +12,8 @@ export interface DeclarationResult {
   source: Foldartal;
   concord: string;
   hasConcord: boolean;
-  layoutRhetoric: FlairType;
-  sourceRhetoric: FlairType;
+  layoutFlair: FlairType;
+  sourceFlair: FlairType;
 }
 
 export function validateCombination(layoutId: number, sourceId: number): ValidationResult {
@@ -89,26 +89,6 @@ export function canHaveFlair(foldartal: Foldartal): boolean {
 }
 
 export function getRandomFlair(foldartal: Foldartal): FlairType {
-  if (!canHaveFlair(foldartal)) {
-    return null;
-  }
-
-  const validFlairs = flairs.filter(f => f.type === foldartal.category);
-
-  if (validFlairs.length === 0) {
-    return null;
-  }
-
-  const randomIndex = Math.floor(Math.random() * (validFlairs.length + 1));
-
-  if (randomIndex === validFlairs.length) {
-    return null;
-  }
-
-  return validFlairs[randomIndex].name as FlairType;
-}
-
-export function getRandomRhetoric(foldartal: Foldartal): FlairType {
   // 修辞触发概率
   const triggerProbability = 0.2;
   if (Math.random() > triggerProbability) {
@@ -150,15 +130,15 @@ export function createDeclaration(layoutId: number, sourceId: number): Declarati
 
   const concord = getConcord(layout, source);
   const hasConcordValue = hasConcord(layout, source);
-  const layoutRhetoric = getRandomRhetoric(layout);
-  const sourceRhetoric = getRandomRhetoric(source);
+  const layoutFlair = getRandomFlair(layout);
+  const sourceFlair = getRandomFlair(source);
 
   return {
     layout,
     source,
     concord,
     hasConcord: hasConcordValue,
-    layoutRhetoric,
-    sourceRhetoric
+    layoutFlair,
+    sourceFlair
   };
 }

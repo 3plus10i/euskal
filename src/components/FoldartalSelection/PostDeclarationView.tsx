@@ -41,56 +41,56 @@ export function PostDeclarationView({
             )}
 
             {/* 修辞显示 */}
-            {(storedDeclaration?.layoutRhetoric && storedDeclaration.layoutRhetoric !== '无') || (storedDeclaration?.sourceRhetoric && storedDeclaration.sourceRhetoric !== '无') ? (
+            {(storedDeclaration?.layoutFlair && storedDeclaration.layoutFlair !== '无') || (storedDeclaration?.sourceFlair && storedDeclaration.sourceFlair !== '无') ? (
               <div className="flex flex-col items-center space-y-1">
                 <p className="text-[clamp(8px,1vw,10px)] text-sammi-snow/70">凯宁嘉修辞</p>
                 <div className="relative flex flex-col items-center space-y-0.5">
-                  {(storedDeclaration?.layoutRhetoric && storedDeclaration.layoutRhetoric !== '无') && (storedDeclaration?.sourceRhetoric && storedDeclaration.sourceRhetoric !== '无') ? (
+                  {(storedDeclaration?.layoutFlair && storedDeclaration.layoutFlair !== '无') && (storedDeclaration?.sourceFlair && storedDeclaration.sourceFlair !== '无') ? (
                     <div className="relative flex flex-col items-center gap-2">
                       <div className="relative flex items-center justify-center">
                         <img
-                          src={`/asset/修辞_${storedDeclaration.layoutRhetoric}.png`}
-                          alt={storedDeclaration.layoutRhetoric}
+                          src={`/asset/修辞_${storedDeclaration.layoutFlair}.png`}
+                          alt={storedDeclaration.layoutFlair}
                           className="absolute left-0 w-[clamp(30px,4vw,36px)] h-[clamp(30px,4vw,36px)] object-contain opacity-20 -z-10 scale-120"
                         />
                         <p className="text-[clamp(8px,1.2vw,14px)] text-sammi-glow font-light text-center relative z-10">
-                          {storedDeclaration.layoutRhetoric}：{getFlairEffect(storedDeclaration.layoutRhetoric)}
+                          {storedDeclaration.layoutFlair}：{getFlairEffect(storedDeclaration.layoutFlair)}
                         </p>
                       </div>
                       <div className="relative flex items-center justify-center">
                         <img
-                          src={`/asset/修辞_${storedDeclaration.sourceRhetoric}.png`}
-                          alt={storedDeclaration.sourceRhetoric}
+                          src={`/asset/修辞_${storedDeclaration.sourceFlair}.png`}
+                          alt={storedDeclaration.sourceFlair}
                           className="absolute right-0 w-[clamp(30px,4vw,36px)] h-[clamp(30px,4vw,36px)] object-contain opacity-20 -z-10 scale-120"
                         />
                         <p className="text-[clamp(8px,1.2vw,14px)] text-sammi-glow font-light text-center relative z-10">
-                          {storedDeclaration.sourceRhetoric}：{getFlairEffect(storedDeclaration.sourceRhetoric)}
+                          {storedDeclaration.sourceFlair}：{getFlairEffect(storedDeclaration.sourceFlair)}
                         </p>
                       </div>
                     </div>
                   ) : (
                     <>
-                      {storedDeclaration?.layoutRhetoric && storedDeclaration.layoutRhetoric !== '无' && (
+                      {storedDeclaration?.layoutFlair && storedDeclaration.layoutFlair !== '无' && (
                         <div className="relative flex items-center justify-center">
                           <img
-                            src={`/asset/修辞_${storedDeclaration.layoutRhetoric}.png`}
-                            alt={storedDeclaration.layoutRhetoric}
+                            src={`/asset/修辞_${storedDeclaration.layoutFlair}.png`}
+                            alt={storedDeclaration.layoutFlair}
                             className="absolute inset-0 w-[clamp(30px,4vw,36px)] h-[clamp(30px,4vw,36px)] object-contain opacity-20 -z-10"
                           />
                           <p className="text-[clamp(10px,1.2vw,14px)] text-sammi-glow font-light relative z-10">
-                            {storedDeclaration.layoutRhetoric}：{getFlairEffect(storedDeclaration.layoutRhetoric)}
+                            {storedDeclaration.layoutFlair}：{getFlairEffect(storedDeclaration.layoutFlair)}
                           </p>
                         </div>
                       )}
-                      {storedDeclaration?.sourceRhetoric && storedDeclaration.sourceRhetoric !== '无' && (
+                      {storedDeclaration?.sourceFlair && storedDeclaration.sourceFlair !== '无' && (
                         <div className="relative flex items-center justify-center">
                           <img
-                            src={`/asset/修辞_${storedDeclaration.sourceRhetoric}.png`}
-                            alt={storedDeclaration.sourceRhetoric}
+                            src={`/asset/修辞_${storedDeclaration.sourceFlair}.png`}
+                            alt={storedDeclaration.sourceFlair}
                             className="absolute inset-0 w-[clamp(30px,4vw,36px)] h-[clamp(30px,4vw,36px)] object-contain opacity-20 -z-10"
                           />
                           <p className="text-[clamp(10px,1.2vw,14px)] text-sammi-glow relative z-10">
-                            {storedDeclaration.sourceRhetoric}：{getFlairEffect(storedDeclaration.sourceRhetoric)}
+                            {storedDeclaration.sourceFlair}：{getFlairEffect(storedDeclaration.sourceFlair)}
                           </p>
                         </div>
                       )}
@@ -105,7 +105,7 @@ export function PostDeclarationView({
         </div>
         
         {/* 唱文行：左右布局 */}
-        <div className="flex flex-row justify-between w-full mt-3 gap-4">
+        <div className="flex flex-row justify-between w-full mt-8 gap-4">
           {declaration.layout.chant && (
             <div className="text-center flex-1">
               <p className="text-[clamp(11px,1.2vw,14px)] italic text-emphasis leading-relaxed font-serif-message">
@@ -186,56 +186,56 @@ export function PostDeclarationView({
               </div>
             )}
 
-            {(storedDeclaration?.layoutRhetoric && storedDeclaration.layoutRhetoric !== '无') || (storedDeclaration?.sourceRhetoric && storedDeclaration.sourceRhetoric !== '无') ? (
+            {(storedDeclaration?.layoutFlair && storedDeclaration.layoutFlair !== '无') || (storedDeclaration?.sourceFlair && storedDeclaration.sourceFlair !== '无') ? (
               <div className="flex flex-col items-center space-y-2">
                 <p className="text-[clamp(10px,1.2vw,12px)] text-sammi-snow/70">凯宁嘉修辞</p>
                 <div className="relative flex flex-col items-center space-y-1">
-                  {(storedDeclaration?.layoutRhetoric && storedDeclaration.layoutRhetoric !== '无') && (storedDeclaration?.sourceRhetoric && storedDeclaration.sourceRhetoric !== '无') ? (
+                  {(storedDeclaration?.layoutFlair && storedDeclaration.layoutFlair !== '无') && (storedDeclaration?.sourceFlair && storedDeclaration.sourceFlair !== '无') ? (
                     <div className="relative flex-col items-center justify-center space-y-1">
                       <div className="relative flex items-center justify-center">
                         <img
-                          src={`/asset/修辞_${storedDeclaration.layoutRhetoric}.png`}
-                          alt={storedDeclaration.layoutRhetoric}
+                          src={`/asset/修辞_${storedDeclaration.layoutFlair}.png`}
+                          alt={storedDeclaration.layoutFlair}
                           className="absolute left-0 w-[clamp(40px,5vw,48px)] h-[clamp(40px,5vw,48px)] object-contain opacity-40 -z-10"
                         />
                         <p className="text-[clamp(8px,1rem,12px)] text-sammi-glow font-light relative z-10">
-                          {storedDeclaration.layoutRhetoric}：{getFlairEffect(storedDeclaration.layoutRhetoric)}
+                          {storedDeclaration.layoutFlair}：{getFlairEffect(storedDeclaration.layoutFlair)}
                         </p>
                       </div>
                       <div className="relative flex items-center justify-center">
                         <img
-                          src={`/asset/修辞_${storedDeclaration.sourceRhetoric}.png`}
-                          alt={storedDeclaration.sourceRhetoric}
+                          src={`/asset/修辞_${storedDeclaration.sourceFlair}.png`}
+                          alt={storedDeclaration.sourceFlair}
                           className="absolute right-0 w-[clamp(40px,5vw,48px)] h-[clamp(40px,5vw,48px)] object-contain opacity-40 -z-10"
                         />
                         <p className="text-[clamp(8px,1rem,12px)] text-sammi-glow font-light relative z-10">
-                          {storedDeclaration.sourceRhetoric}：{getFlairEffect(storedDeclaration.sourceRhetoric)}
+                          {storedDeclaration.sourceFlair}：{getFlairEffect(storedDeclaration.sourceFlair)}
                         </p>
                       </div>
                     </div>
                   ) : (
                     <>
-                      {storedDeclaration?.layoutRhetoric && storedDeclaration.layoutRhetoric !== '无' && (
+                      {storedDeclaration?.layoutFlair && storedDeclaration.layoutFlair !== '无' && (
                         <div className="relative flex items-center justify-center">
                           <img
-                            src={`/asset/修辞_${storedDeclaration.layoutRhetoric}.png`}
-                            alt={storedDeclaration.layoutRhetoric}
+                            src={`/asset/修辞_${storedDeclaration.layoutFlair}.png`}
+                            alt={storedDeclaration.layoutFlair}
                             className="absolute inset-0 w-[clamp(40px,5vw,48px)] h-[clamp(40px,5vw,48px)] object-contain opacity-20 -z-10"
                           />
                           <p className="text-[clamp(12px,1.5vw,16px)] text-sammi-glow relative z-10">
-                            {storedDeclaration.layoutRhetoric}：{getFlairEffect(storedDeclaration.layoutRhetoric)}
+                            {storedDeclaration.layoutFlair}：{getFlairEffect(storedDeclaration.layoutFlair)}
                           </p>
                         </div>
                       )}
-                      {storedDeclaration?.sourceRhetoric && storedDeclaration.sourceRhetoric !== '无' && (
+                      {storedDeclaration?.sourceFlair && storedDeclaration.sourceFlair !== '无' && (
                         <div className="relative flex items-center justify-center">
                           <img
-                            src={`/asset/修辞_${storedDeclaration.sourceRhetoric}.png`}
-                            alt={storedDeclaration.sourceRhetoric}
+                            src={`/asset/修辞_${storedDeclaration.sourceFlair}.png`}
+                            alt={storedDeclaration.sourceFlair}
                             className="absolute inset-0 w-[clamp(40px,5vw,48px)] h-[clamp(40px,5vw,48px)] object-contain opacity-20 -z-10"
                           />
                           <p className="text-[clamp(12px,1.5vw,16px)] text-sammi-glow relative z-10">
-                            {storedDeclaration.sourceRhetoric}：{getFlairEffect(storedDeclaration.sourceRhetoric)}
+                            {storedDeclaration.sourceFlair}：{getFlairEffect(storedDeclaration.sourceFlair)}
                           </p>
                         </div>
                       )}

@@ -24,9 +24,9 @@ interface FoldartalWorkspaceProps {
 export interface StoredDeclaration {
   timestamp: string;
   layoutCipherName: string;
-  layoutRhetoric: string | null;
+  layoutFlair: string | null;
   sourceCipherName: string;
-  sourceRhetoric: string | null;
+  sourceFlair: string | null;
 }
 
 
@@ -57,9 +57,9 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
       const newStoredDeclaration: StoredDeclaration = {
         timestamp,
         layoutCipherName: heroLayout?.name || '英雄',
-        layoutRhetoric: '延续', // 调试模式固定修辞
+        layoutFlair: '延续', // 调试模式固定修辞
         sourceCipherName: singSource?.name || '歌唱',
-        sourceRhetoric: '自足'  // 调试模式固定修辞
+        sourceFlair: '自足'  // 调试模式固定修辞
       };
       
       // 自动宣告
@@ -124,9 +124,9 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
       const newStoredDeclaration: StoredDeclaration = {
         timestamp,
         layoutCipherName: selectedLayout.name,
-        layoutRhetoric: declaration?.layoutRhetoric || null,
+        layoutFlair: declaration?.layoutFlair || null,
         sourceCipherName: selectedSource.name,
-        sourceRhetoric: declaration?.sourceRhetoric || null
+        sourceFlair: declaration?.sourceFlair || null
       };
       
       const existingDeclarations = JSON.parse(localStorage.getItem('declarations') || '[]');
@@ -148,6 +148,8 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
         selectedLayout.name,
         selectedSource.name,
         declaration?.concord || '',
+        declaration?.layoutFlair || '',
+        declaration?.sourceFlair || '',
         selectedLayout.god,
         selectedSource.god,
         selectedLayout.motto,
@@ -189,13 +191,13 @@ export function FoldartalWorkspace({ userName, initialMessages, onSendMessage, o
     // 调试模式：确保修辞一定触发
     if (debugMode && result) {
       // 获取适合类别的修辞
-      const layoutFlair = flairs.find(f => f.type === '布局');
-      const sourceFlair = flairs.find(f => f.type === '本因');
+      const layoutFlairInstance = flairs.find(f => f.type === '布局');
+      const sourceFlairInstance = flairs.find(f => f.type === '本因');
       
       return {
         ...result,
-        layoutRhetoric: (layoutFlair?.name as FlairType) || '延续',
-        sourceRhetoric: (sourceFlair?.name as FlairType) || '自足'
+        layoutFlair: (layoutFlairInstance?.name as FlairType) || '延续',
+        sourceFlair: (sourceFlairInstance?.name as FlairType) || '自足'
       };
     }
     

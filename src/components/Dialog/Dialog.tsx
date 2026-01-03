@@ -168,11 +168,12 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
         />
       </div>
 
+      {/* 一条消息框 */}
       <div className="relative z-10 flex-1 flex flex-col p-4 md:p-6 md:w-[50vw] md:bg-transparent h-full" style={{ background: 'linear-gradient(to bottom,transparent 0%,rgba(0, 0, 0, 0.25) 15%,rgba(0, 0, 0, 0.25) 85%,transparent 100%)' }}>
         <div className="flex-1 min-h-0 overflow-y-auto space-y-4 pr-2" style={{ scrollbarWidth: 'none' }}>
           {messagesToRender.map((message, index) => (
-            <div key={index} className="ice-glass-b3 p-4">
-              <div className="text-sammi-snow font-bold text-sm mb-2">
+            <div key={index} className="ice-glass-b3 py-2 px-3">
+              <div className={`text-sammi-snow font-bold text-sm mb-2 ${message.role === 'user' ? 'text-right' : ''}`}>
                 {getSpeakerName(message.role)}
                 {message.timestamp && (
                   <span className="text-sammi-glow/70 font-light text-xs ml-2">
@@ -180,7 +181,7 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
                   </span>
                 )}
               </div>
-              <div className="text-sammi-glow leading-relaxed whitespace-normal font-serif-message text-sm prose prose-invert max-w-none">
+              <div className="text-sammi-glow leading-tight whitespace-normal font-serif-message text-sm prose prose-invert max-w-none">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                   {message.content}
                 </ReactMarkdown>
@@ -188,6 +189,7 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
             </div>
           ))}
           
+          {/* 占位符消息框 */}
           {shouldShowPlaceholder && (
             <div className="ice-glass-b3 p-4">
               <div className="text-sammi-snow font-bold text-sm mb-2">
@@ -204,6 +206,7 @@ export function Dialog({ messages, onSendMessage, isLoading, isWaitingForRespons
           <div ref={messagesEndRef} />
         </div>
 
+        {/* 输入框 */}
         <form onSubmit={handleSubmit} className="flex-shrink-0 flex gap-2 mt-4 items-end">
           <textarea
             ref={textareaRef}
